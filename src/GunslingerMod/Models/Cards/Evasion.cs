@@ -10,11 +10,15 @@ public sealed class Evasion() : CardModel(1, CardType.Skill, CardRarity.Common, 
 {
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await PowerCmd.Apply<EvasionPower>(Owner.Creature, 1, Owner.Creature, this);
+        await CreatureCmd.GainBlock(
+            Owner.Creature,
+            IsUpgraded ? 10m : 8m,
+            MegaCrit.Sts2.Core.ValueProps.ValueProp.Move,
+            cardPlay);
+        await PowerCmd.Apply<EvasionPower>(Owner.Creature, IsUpgraded ? 14 : 10, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
-        EnergyCost.UpgradeBy(-1);
     }
 }

@@ -6,7 +6,7 @@ using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class TracerLoad() : CardModel(1, CardType.Skill, CardRarity.Common, TargetType.None)
+public sealed class TracerLoad() : CardModel(0, CardType.Skill, CardRarity.Common, TargetType.None)
 {
     private const int MaxAmmo = 6;
 
@@ -19,12 +19,11 @@ public sealed class TracerLoad() : CardModel(1, CardType.Skill, CardRarity.Commo
         if (cylinder.CountLoaded() == 0)
             cylinder.ResetChambers();
 
-        const int loads = 3;
+        var loads = IsUpgraded ? 4 : 3;
         for (var i = 0; i < loads; i++)
             cylinder.TryLoadNext(CylinderPower.AmmoType.Tracer);
 
-        if (IsUpgraded)
-            await CardPileCmd.Draw(choiceContext, 1, Owner);
+        await CardPileCmd.Draw(choiceContext, 1, Owner);
 
         var count = cylinder.CountLoaded();
         if (count > MaxAmmo)

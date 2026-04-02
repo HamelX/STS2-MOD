@@ -11,7 +11,7 @@ using GunslingerMod.Models.DynamicVars;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class Panning() : CardModel(3, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class Panning() : CardModel(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
@@ -22,8 +22,16 @@ public sealed class Panning() : CardModel(3, CardType.Attack, CardRarity.Common,
     {
         var preferredTarget = cardPlay.Target;
         var cylinder = Owner.Creature.GetPower<CylinderPower>();
-        if (cylinder == null || cylinder.Amount <= 0)
+        if (cylinder == null)
             return;
+
+        if (cylinder.Amount <= 0)
+        {
+            var dryTarget = BulletResolver.ResolveAliveTarget(Owner.Creature, preferredTarget);
+            if (dryTarget != null)
+                await CreatureCmd.Damage(choiceContext, dryTarget, IsUpgraded ? 8m : 6m, MegaCrit.Sts2.Core.ValueProps.ValueProp.Move, Owner.Creature, this);
+            return;
+        }
 
         for (var i = 0; i < 6; i++)
         {
@@ -40,7 +48,7 @@ public sealed class Panning() : CardModel(3, CardType.Attack, CardRarity.Common,
             if (shotTarget == null)
                 break;
 
-            var shotDamage = BulletResolver.GetBaseDamage(ammoType, sealLevel);
+            var shotDamage = BulletResolver.GetBaseDamage(ammoType, sealLevel) + (IsUpgraded ? 6m : 4m);
 
             // Per-shot resolution contract:
             // fire once -> apply damage -> re-check combat end before continuing.
@@ -56,8 +64,5 @@ public sealed class Panning() : CardModel(3, CardType.Attack, CardRarity.Common,
         }
     }
 
-    protected override void OnUpgrade()
-    {
-        AddKeyword(CardKeyword.Retain);
-    }
+    protected override void OnUpgrade() { }
 }

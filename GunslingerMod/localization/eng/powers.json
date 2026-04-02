@@ -3,7 +3,7 @@
   "IMPRINT_POWER.description": "Built-up focus from firing.",
   "IMPRINT_POWER.smartDescription": "Imprint stacks: {Amount}.",
   "EVASION_POWER.title": "Evasion",
-  "EVASION_POWER.description": "This turn, damage you take is halved.",
+  "EVASION_POWER.description": "This turn, reduce incoming damage by up to {Amount}.",
   "EVASION_PLUS_POWER.title": "Evasion+",
   "EVASION_PLUS_POWER.description": "This turn, damage you take is halved and reduced by 1.",
   "RELOAD_LOCK_POWER.title": "Reload Lock",

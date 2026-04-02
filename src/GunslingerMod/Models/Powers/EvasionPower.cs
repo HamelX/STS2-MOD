@@ -17,13 +17,12 @@ public sealed class EvasionPower : PowerModel
 
     public override bool ShouldReceiveCombatHooks => true;
 
-    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
+    public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
-        if (target == Owner)
-        {
-            return 0.5m;
-        }
-        return 1m;
+        if (target != Owner || amount <= 0)
+            return 0m;
+
+        return -decimal.Min(amount, Amount);
     }
 
     public override Task AfterTurnEnd(PlayerChoiceContext choiceContext, CombatSide side)

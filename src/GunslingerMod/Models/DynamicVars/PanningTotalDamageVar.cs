@@ -25,6 +25,13 @@ public sealed class PanningTotalDamageVar : DamageVar
             return;
         }
 
+        if (cylinder.CountLoaded() <= 0)
+        {
+            BaseValue = card.IsUpgraded ? 8m : 6m;
+            base.UpdateCardPreview(card, previewMode, target, runGlobalHooks);
+            return;
+        }
+
         decimal totalDamage = 0m;
 
         for (var i = 0; i < CylinderPower.MaxRounds; i++)
@@ -35,7 +42,7 @@ public sealed class PanningTotalDamageVar : DamageVar
             var ammoType = cylinder.GetAmmoType(i);
             var sealLevel = cylinder.GetSealLevel(i);
 
-            var shotDamage = BulletResolver.GetBaseDamage(ammoType, sealLevel);
+            var shotDamage = BulletResolver.GetBaseDamage(ammoType, sealLevel) + (card.IsUpgraded ? 6m : 4m);
 
             totalDamage += shotDamage;
 

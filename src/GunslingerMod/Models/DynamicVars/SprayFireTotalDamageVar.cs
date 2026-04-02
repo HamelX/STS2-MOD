@@ -25,8 +25,13 @@ public sealed class SprayFireTotalDamageVar : DamageVar
             return;
         }
 
+        if (cylinder.CountLoaded() <= 0)
+        {
+            BaseValue = card.IsUpgraded ? 12m : 8m;
+            base.UpdateCardPreview(card, previewMode, target, runGlobalHooks);
+            return;
+        }
         decimal totalDamage = 0m;
-        var multiplier = card.IsUpgraded ? 0.85m : 0.75m;
 
         for (var i = 0; i < CylinderPower.MaxRounds; i++)
         {

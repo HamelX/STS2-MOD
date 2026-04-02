@@ -26,8 +26,9 @@ public sealed class Reload() : CardModel(0, CardType.Skill, CardRarity.Common, T
 
         var ammoTypeToLoad = CylinderPower.AmmoType.Normal;
 
-        // Load 2 rounds with a quick "insert, insert" pacing so it feels like placing bullets into chambers.
-        for (var i = 0; i < 2; i++)
+        var loads = IsUpgraded ? 3 : 2;
+
+        for (var i = 0; i < loads; i++)
         {
             // TryLoadNext loads the next empty chamber in firing order.
             var beforeMask = cylinder.LoadedMask;
@@ -48,11 +49,10 @@ public sealed class Reload() : CardModel(0, CardType.Skill, CardRarity.Common, T
             await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, count, Owner.Creature, this);
 
             // Quick pacing between inserts (skip delay after the last one)
-            if (i == 0)
+            if (i < loads - 1)
                 await Cmd.Wait(0.07f);
         }
 
-        if (IsUpgraded)
-            await CardPileCmd.Draw(choiceContext, 1, Owner);
+        await CardPileCmd.Draw(choiceContext, 1, Owner);
     }
 }

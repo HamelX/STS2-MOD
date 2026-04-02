@@ -3,7 +3,7 @@
   "IMPRINT_POWER.description": "사격으로 축적되는 집중입니다.",
   "IMPRINT_POWER.smartDescription": "각인 중첩: {Amount}.",
   "EVASION_POWER.title": "회피",
-  "EVASION_POWER.description": "이번 턴, 받는 피해가 절반이 됩니다.",
+  "EVASION_POWER.description": "이번 턴, 받는 피해를 최대 {Amount} 감소시킵니다.",
   "EVASION_PLUS_POWER.title": "회피+",
   "EVASION_PLUS_POWER.description": "이번 턴, 받는 피해가 절반이 되고 추가로 1 감소합니다.",
   "RELOAD_LOCK_POWER.title": "재장전 불가",

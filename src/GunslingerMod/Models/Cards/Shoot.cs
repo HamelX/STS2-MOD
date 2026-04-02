@@ -18,24 +18,23 @@ public sealed class Shoot() : CardModel(1, CardType.Attack, CardRarity.Basic, Ta
         if (cylinder == null || !BulletResolver.ShouldContinueFiring(Owner.Creature.CombatState))
             return;
 
-        var pulls = IsUpgraded ? 2 : 1;
-        for (var i = 0; i < pulls; i++)
+        if (!BulletResolver.ShouldContinueFiring(Owner.Creature.CombatState))
+            return;
+
+        var target = BulletResolver.ResolveAliveTarget(Owner.Creature, cardPlay.Target);
+        if (target == null)
+            return;
+
+        var didFire = BulletResolver.TryConsumeCurrentWithSealSkip(cylinder, this, out var ammoType, out var sealLevel);
+        await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
+
+        if (didFire)
         {
-            if (!BulletResolver.ShouldContinueFiring(Owner.Creature.CombatState))
-                break;
-
-            var target = BulletResolver.ResolveAliveTarget(Owner.Creature, cardPlay.Target);
-            if (target == null)
-                break;
-
-            var didFire = BulletResolver.TryConsumeCurrentWithSealSkip(cylinder, this, out var ammoType, out var sealLevel);
-            await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
-
-            if (!didFire)
-                continue;
-
-            var damage = Math.Max(0m, BulletResolver.GetBaseDamage(ammoType, sealLevel));
+            var damage = Math.Max(0m, BulletResolver.GetBaseDamage(ammoType, sealLevel) + 1m + (IsUpgraded ? 4m : 0m));
             await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, damage);
+            return;
         }
+
+        await CreatureCmd.Damage(choiceContext, target, IsUpgraded ? 9m : 5m, MegaCrit.Sts2.Core.ValueProps.ValueProp.Move, Owner.Creature, this);
     }
 }
