@@ -129,8 +129,15 @@ internal static class BulletResolver
             if (!HasAliveOpponents(source))
                 return;
 
+            var isFirstTracerShotThisTurn =
+                ammoType == CylinderPower.AmmoType.Tracer &&
+                !suppressTracerTriggers &&
+                ((source.GetPower<TracerFiredThisTurnPower>()?.Amount ?? 0) <= 0);
+
             var finalDamage = ResolveBulletEffect(source, ammoType, sealLevel, damage);
             finalDamage += source.GetPower<ImprintIgnitionPower>()?.Amount ?? 0;
+            if (isFirstTracerShotThisTurn && source.GetPower<OverclockDrumPower>()?.Amount > 0)
+                finalDamage += OverclockDrumPower.FirstTracerDamageBonus;
 
             // Seal Lv7+: keep a single hit, but double that hit's final damage.
             if (ammoType == CylinderPower.AmmoType.Seal && sealLevel >= CylinderPower.SealThresholdUnblockable)
@@ -175,10 +182,7 @@ internal static class BulletResolver
 
             if (ammoType == CylinderPower.AmmoType.Tracer && !suppressTracerTriggers)
             {
-                await RegisterTracerShots(choiceContext, source, cardSource, 1);
-
                 var tracerFlag = source.GetPower<TracerFiredThisTurnPower>();
-                var isFirstTracerShotThisTurn = tracerFlag == null || tracerFlag.Amount <= 0;
                 if (isFirstTracerShotThisTurn)
                     await PowerCmd.Apply<TracerFiredThisTurnPower>(source, 1, source, cardSource);
                 else if (tracerFlag != null && tracerFlag.Amount != 1)
@@ -194,9 +198,6 @@ internal static class BulletResolver
 
                         await PowerCmd.Apply<ImprintPower>(source, ballisticCompiler, source, cardSource);
                     }
-
-                    if (source.GetPower<OverclockDrumPower>()?.Amount > 0)
-                        await TriggerOverclockExtraPull(choiceContext, source, target, cardSource);
                 }
             }
 
@@ -207,29 +208,9 @@ internal static class BulletResolver
         }
     }
 
-    public static async Task RegisterTracerShots(PlayerChoiceContext choiceContext, Creature source, CardModel cardSource, int tracerShotsAdded)
+    public static Task RegisterTracerShots(PlayerChoiceContext choiceContext, Creature source, CardModel cardSource, int tracerShotsAdded)
     {
-        if (tracerShotsAdded <= 0)
-            return;
-
-        var drum = source.GetPower<OverclockDrumPower>();
-        if (drum == null || drum.Amount <= 0)
-            return;
-
-        var explosions = drum.AddTracerShots(tracerShotsAdded);
-        if (explosions <= 0)
-            return;
-
-        var opponents = source.CombatState?.GetOpponentsOf(source).Where(c => c.IsAlive && c.CurrentHp > 0).ToList();
-        if (opponents == null || opponents.Count == 0)
-            return;
-
-        const decimal explosionDamage = 8m;
-        for (var i = 0; i < explosions; i++)
-        {
-            foreach (var enemy in opponents.Where(e => e.IsAlive && e.CurrentHp > 0))
-                await CreatureCmd.Damage(choiceContext, enemy, explosionDamage, ValueProp.Move, source, cardSource);
-        }
+        return Task.CompletedTask;
     }
 
     private static async Task ApplyAutomaticImprintGain(Creature source, CardModel cardSource, CylinderPower.AmmoType ammoType)
@@ -262,33 +243,6 @@ internal static class BulletResolver
 
         if (halfImprint != null)
             await PowerCmd.SetAmount<HalfImprintPower>(source, remainder, source, cardSource);
-    }
-
-    private static async Task TriggerOverclockExtraPull(PlayerChoiceContext choiceContext, Creature source, Creature preferredTarget, CardModel cardSource)
-    {
-        if (!HasAliveOpponents(source))
-            return;
-
-        var cylinder = source.GetPower<CylinderPower>();
-        if (cylinder == null)
-            return;
-
-        var target = ResolveAliveTarget(source, preferredTarget);
-        if (target == null)
-            return;
-
-        var didFire = TryConsumeCurrentWithSealSkip(cylinder, cardSource, out var ammoType, out var sealLevel);
-        await PowerCmd.SetAmount<CylinderPower>(source, cylinder.CountLoaded(), source, cardSource);
-
-        if (!didFire)
-            return;
-
-        if (!HasAliveOpponents(source))
-            return;
-
-        var damage = Math.Max(0m, GetBaseDamage(ammoType, sealLevel));
-        // Do not allow extra-pull shots to retrigger tracer synergies recursively.
-        await FireAtTarget(choiceContext, source, target, cardSource, ammoType, sealLevel, damage, suppressTracerTriggers: true);
     }
 
     public static bool HasAliveOpponents(Creature source)

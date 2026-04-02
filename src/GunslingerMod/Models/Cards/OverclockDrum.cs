@@ -6,7 +6,7 @@ using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class OverclockDrum() : CardModel(2, CardType.Power, CardRarity.Rare, TargetType.None)
+public sealed class OverclockDrum() : CardModel(2, CardType.Power, CardRarity.Uncommon, TargetType.None)
 {
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -15,5 +15,10 @@ public sealed class OverclockDrum() : CardModel(2, CardType.Power, CardRarity.Ra
             return;
 
         await PowerCmd.Apply<OverclockDrumPower>(Owner.Creature, 1, Owner.Creature, this);
+    }
+
+    protected override void OnUpgrade()
+    {
+        EnergyCost.UpgradeBy(-1);
     }
 }
