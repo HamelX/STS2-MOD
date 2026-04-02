@@ -48,7 +48,7 @@
   "TAG_BURST.title": "タグバースト",
   "TAG_BURST.description": "{IfUpgraded:show:10ダメージでトリガープル1回。発射成功時、追加で{Damage:diff()}ダメージを与える。空なら代わりに5ダメージを与える。|7ダメージでトリガープル1回。発射成功時、追加で{Damage:diff()}ダメージを与える。空なら代わりに5ダメージを与える。}",
   "WALKING_FIRE.title": "ウォーキングファイア",
-  "WALKING_FIRE.description": "{IfUpgraded:show:刻印を3消費。トリガープル3回。このカード中に1回でも発射成功したら、トレーサー弾を1発装填。|刻印を3消費。トリガープル2回。このカード中に1回でも発射成功したら、トレーサー弾を1発装填。}",
+  "WALKING_FIRE.description": "{IfUpgraded:show:刻印を3消費。トリガープル3回。このカード中に1回でも発射成功したら、トレーサー弾を1発装填する。|刻印を3消費。トリガープル2回。このカード中に1回でも発射成功したら、トレーサー弾を1発装填する。}",
   "CROSSFIRE_RHYTHM.title": "クロスファイア・リズム",
   "CROSSFIRE_RHYTHM.description": "{IfUpgraded:show:刻印2消費。発射2回。TracerリズムONならさらに+1回。|刻印2消費。発射1回。TracerリズムONならさらに+1回。}",
   "TAKE_COVER.title": "遮蔽",

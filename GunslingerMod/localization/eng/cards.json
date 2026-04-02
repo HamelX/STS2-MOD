@@ -48,7 +48,7 @@
   "TAG_BURST.title": "Tag Burst",
   "TAG_BURST.description": "{IfUpgraded:show:Trigger Pull 1 time for 10 damage. On a successful shot, deal an additional {Damage:diff()} damage. If empty, deal 5 damage instead.|Trigger Pull 1 time for 7 damage. On a successful shot, deal an additional {Damage:diff()} damage. If empty, deal 5 damage instead.}",
   "WALKING_FIRE.title": "Walking Fire",
-  "WALKING_FIRE.description": "{IfUpgraded:show:Spend 3 Imprint. Trigger Pull 3 times. If any shot succeeds, load 1 Tracer round and add it to Overclock counter.|Spend 3 Imprint. Trigger Pull 2 times. If any shot succeeds, load 1 Tracer round and add it to Overclock counter.}",
+  "WALKING_FIRE.description": "{IfUpgraded:show:Spend 3 Imprint. Trigger Pull 3 times. If any shot succeeds, load 1 Tracer round.|Spend 3 Imprint. Trigger Pull 2 times. If any shot succeeds, load 1 Tracer round.}",
   "CROSSFIRE_RHYTHM.title": "Crossfire Rhythm",
   "CROSSFIRE_RHYTHM.description": "{IfUpgraded:show:Spend 2 Imprint. Trigger Pull 2 times. If Tracer Rhythm is ON, trigger pull +1 additional time.|Spend 2 Imprint. Trigger Pull 1 time. If Tracer Rhythm is ON, trigger pull +1 additional time.}",
   "TAKE_COVER.title": "Take Cover",

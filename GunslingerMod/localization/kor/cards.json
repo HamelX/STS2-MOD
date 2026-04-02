@@ -48,7 +48,7 @@
   "TAG_BURST.title": "표식 폭발",
   "TAG_BURST.description": "{IfUpgraded:show:10 피해로 격발 1회. 발사에 성공하면 추가로 {Damage:diff()} 피해를 줍니다. 비어 있으면 대신 5 피해를 줍니다.|7 피해로 격발 1회. 발사에 성공하면 추가로 {Damage:diff()} 피해를 줍니다. 비어 있으면 대신 5 피해를 줍니다.}",
   "WALKING_FIRE.title": "워킹 파이어",
-  "WALKING_FIRE.description": "{IfUpgraded:show:각인 3 소모. 방아쇠 3회. 발사 성공 시 추적탄 1발 장전하고 오버클럭 카운터 +1.|각인 3 소모. 방아쇠 2회. 발사 성공 시 추적탄 1발 장전하고 오버클럭 카운터 +1.}",
+  "WALKING_FIRE.description": "{IfUpgraded:show:각인 3 소모. 방아쇠 3회. 발사에 한 번이라도 성공하면 추적탄 1발을 장전합니다.|각인 3 소모. 방아쇠 2회. 발사에 한 번이라도 성공하면 추적탄 1발을 장전합니다.}",
   "CROSSFIRE_RHYTHM.title": "사냥 개시",
   "CROSSFIRE_RHYTHM.description": "{IfUpgraded:show:각인 2소모. 격발 2회. 사냥개시 상태면 추가로 +1회 격발.|각인 2소모. 격발 1회. 사냥개시 상태면 추가로 +1회 격발.}",
   "TAKE_COVER.title": "엄폐",
