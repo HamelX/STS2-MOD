@@ -12,7 +12,6 @@
   "AMMO.penetrator_note": "Effect: Ignore block",
   "AMMO.tracer_note": "Effect: Low damage. Enables Tracer Rhythm this turn.",
   "AMMO.seal_level": "Seal level: {l}",
-  "AMMO.seal_t4": "Lv5+: +1 extra hit",
-  "AMMO.seal_t8": "Lv7+: Double damage + Ignore block",
-  "AMMO.seal_t12": "Lv15+: Overpenetration (70%/50% behind)"
+  "AMMO.seal_t3": "Lv3+: Apply 1 Vulnerable",
+  "AMMO.seal_t4": "Lv4+: Apply 2 Vulnerable + 1 Frail"
 }

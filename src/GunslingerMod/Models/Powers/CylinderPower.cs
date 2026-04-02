@@ -52,7 +52,9 @@ public sealed class CylinderPower : PowerModel
     public const int MaxSealRounds = 1;
 
     public const int SealThresholdExtraHit = 255;
-    public const int SealThresholdUnblockable = 7;
+    public const int SealThresholdVulnerable = 3;
+    public const int SealThresholdFrail = 4;
+    public const int SealThresholdUnblockable = 255;
     public const int SealThresholdOverpenetration = 255;
 
     public void ResetChambers()

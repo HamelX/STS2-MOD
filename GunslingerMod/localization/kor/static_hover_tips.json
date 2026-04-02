@@ -10,7 +10,8 @@
   "AMMO.seal": "탄종: 봉인탄",
   "AMMO.unknown": "탄종: ?",
   "AMMO.penetrator_note": "효과: 방어도 무시",
-  "AMMO.tracer_note": "효과: 낮은 피해. 이번 턴 [사냥개시]를 활성화합니다.",
+  "AMMO.tracer_note": "효과: 낮은 피해. 이번 턴 [추적 개시]를 활성화합니다.",
   "AMMO.seal_level": "봉인 레벨: {l}",
-  "AMMO.seal_t8": "레벨 7+: 데미지 2배, 방어도 무시"
+  "AMMO.seal_t3": "레벨 3+: 취약 1 부여",
+  "AMMO.seal_t4": "레벨 4+: 취약 2 + 허약 1 부여"
 }

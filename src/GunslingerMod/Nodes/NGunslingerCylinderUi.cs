@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.Screens.Map;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Nodes.HoverTips;
+using GunslingerMod.Models.Combat;
 using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Nodes;
@@ -181,13 +182,7 @@ public partial class NGunslingerCylinderUi : Control
             var ammoType = power?.GetAmmoType(chamberIndex) ?? CylinderPower.AmmoType.None;
             var sealLevel = ammoType == CylinderPower.AmmoType.Seal ? (power?.GetSealLevel(chamberIndex) ?? (byte)0) : (byte)0;
 
-            var dmg = ammoType switch
-            {
-                CylinderPower.AmmoType.Enhanced => 10,
-                CylinderPower.AmmoType.Tracer => 6,
-                CylinderPower.AmmoType.Seal => 10 + sealLevel,
-                _ => 8
-            };
+            var dmg = (int)BulletResolver.GetBaseDamage(ammoType, sealLevel);
 
             var ammoNameKey = ammoType switch
             {
@@ -216,9 +211,12 @@ public partial class NGunslingerCylinderUi : Control
             if (ammoType == CylinderPower.AmmoType.Seal)
             {
                 sb.Append("\n").Append(new MegaCrit.Sts2.Core.Localization.LocString("static_hover_tips", "AMMO.seal_level").GetFormattedText().Replace("{l}", sealLevel.ToString()));
-                sb.Append("\n");
-                sb.Append(sealLevel >= CylinderPower.SealThresholdUnblockable ? "[●] " : "[ ] ")
-                    .Append(new MegaCrit.Sts2.Core.Localization.LocString("static_hover_tips", "AMMO.seal_t8").GetFormattedText());
+                sb.Append("\n")
+                    .Append(sealLevel >= CylinderPower.SealThresholdVulnerable ? "[●] " : "[ ] ")
+                    .Append(new MegaCrit.Sts2.Core.Localization.LocString("static_hover_tips", "AMMO.seal_t3").GetFormattedText());
+                sb.Append("\n")
+                    .Append(sealLevel >= CylinderPower.SealThresholdFrail ? "[●] " : "[ ] ")
+                    .Append(new MegaCrit.Sts2.Core.Localization.LocString("static_hover_tips", "AMMO.seal_t4").GetFormattedText());
             }
 
             desc = sb.ToString();

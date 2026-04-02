@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using GunslingerMod.Models.Cards;
 using GunslingerMod.Models.Powers;
@@ -96,7 +97,7 @@ internal static class BulletResolver
         {
             CylinderPower.AmmoType.Enhanced => 10m,
             CylinderPower.AmmoType.Tracer => 6m,
-            CylinderPower.AmmoType.Seal => 10m + sealLevel,
+            CylinderPower.AmmoType.Seal => GetSealBaseDamage(sealLevel),
             _ => 8m
         };
     }
@@ -139,14 +140,15 @@ internal static class BulletResolver
             if (isFirstTracerShotThisTurn && source.GetPower<OverclockDrumPower>()?.Amount > 0)
                 finalDamage += OverclockDrumPower.FirstTracerDamageBonus;
 
-            // Seal Lv7+: keep a single hit, but double that hit's final damage.
-            if (ammoType == CylinderPower.AmmoType.Seal && sealLevel >= CylinderPower.SealThresholdUnblockable)
-                finalDamage *= 2m;
-
             if (!HasAliveOpponents(source))
                 return;
 
             await CreatureCmd.Damage(choiceContext, target, finalDamage, props, source, cardSource);
+
+            if (!HasAliveOpponents(source))
+                return;
+
+            await ApplySealLevelStatusEffects(source, target, cardSource, ammoType, sealLevel);
 
             if (!HasAliveOpponents(source))
                 return;
@@ -211,6 +213,32 @@ internal static class BulletResolver
     public static Task RegisterTracerShots(PlayerChoiceContext choiceContext, Creature source, CardModel cardSource, int tracerShotsAdded)
     {
         return Task.CompletedTask;
+    }
+
+    private static decimal GetSealBaseDamage(byte sealLevel)
+    {
+        var level = Math.Max(1, (int)sealLevel);
+        return 8m + (4m * level);
+    }
+
+    private static async Task ApplySealLevelStatusEffects(
+        Creature source,
+        Creature target,
+        CardModel cardSource,
+        CylinderPower.AmmoType ammoType,
+        byte sealLevel)
+    {
+        if (ammoType != CylinderPower.AmmoType.Seal || target == null || !target.IsAlive || target.CurrentHp <= 0)
+            return;
+
+        if (sealLevel >= CylinderPower.SealThresholdFrail)
+            await PowerCmd.Apply<FrailPower>(target, 1, source, cardSource);
+
+        if (sealLevel >= CylinderPower.SealThresholdVulnerable)
+        {
+            var vulnerableAmount = sealLevel >= CylinderPower.SealThresholdFrail ? 2 : 1;
+            await PowerCmd.Apply<VulnerablePower>(target, vulnerableAmount, source, cardSource);
+        }
     }
 
     private static async Task ApplyAutomaticImprintGain(Creature source, CardModel cardSource, CylinderPower.AmmoType ammoType)
