@@ -23,10 +23,14 @@ public sealed class SealLoad() : CardModel(1, CardType.Skill, CardRarity.Common,
         if (cylinder == null)
             return;
 
+        var loadedNewSeal = false;
         if (cylinder.CountSealLoaded() >= CylinderPower.MaxSealRounds)
             cylinder.IncrementSealLevels(1);
         else
-            cylinder.TryLoadNext(CylinderPower.AmmoType.Seal);
+            loadedNewSeal = cylinder.TryLoadNext(CylinderPower.AmmoType.Seal);
+
+        if (loadedNewSeal)
+            await SealShotHelper.GrantTemporaryToHand(choiceContext, this);
 
         await CreatureCmd.GainBlock(Owner.Creature, IsUpgraded ? 8m : 5m, MegaCrit.Sts2.Core.ValueProps.ValueProp.Move, cardPlay);
 
