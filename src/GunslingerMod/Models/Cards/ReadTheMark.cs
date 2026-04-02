@@ -14,26 +14,28 @@ public sealed class ReadTheMark() : CardModel(1, CardType.Skill, CardRarity.Comm
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new BlockVar(8m, ValueProp.Move)
+        new BlockVar(10m, ValueProp.Move)
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block.BaseValue, ValueProp.Move, cardPlay);
 
-        var hasRicochetStack =
-            (Owner.Creature.GetPower<RicochetPower>()?.Amount ?? 0) > 0 ||
-            (Owner.Creature.GetPower<RicochetImprintPower>()?.Amount ?? 0) > 0;
+        var cylinder = Owner.Creature.GetPower<CylinderPower>();
+        if (cylinder == null)
+            return;
 
-        if (hasRicochetStack)
+        var imprintAmount = Owner.Creature.GetPower<ImprintPower>()?.Amount ?? 0;
+        if (IsUpgraded || imprintAmount >= 1)
         {
-            await CardPileCmd.Draw(choiceContext, 1, Owner);
-            await PowerCmd.Apply<ImprintPower>(Owner.Creature, 1, Owner.Creature, this);
+            await CardPileCmd.Draw(choiceContext, 2, Owner);
+            cylinder.AdvanceChamber();
+            await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
         }
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Block.UpgradeValueBy(3m);
+        DynamicVars.Block.UpgradeValueBy(4m);
     }
 }

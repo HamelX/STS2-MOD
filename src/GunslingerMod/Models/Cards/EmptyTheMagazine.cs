@@ -1,8 +1,9 @@
+using System;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.ValueProps;
 using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
@@ -17,21 +18,44 @@ public sealed class EmptyTheMagazine() : CardModel(1, CardType.Skill, CardRarity
         if (cylinder == null)
             return;
 
-        var removedCount = cylinder.CountLoaded();
-        if (removedCount > 0)
-            cylinder.ClearAll();
+        var normalCount = 0;
+        var tracerCount = 0;
+        var sealLevelTotal = 0;
+        for (var i = 0; i < CylinderPower.MaxRounds; i++)
+        {
+            switch (cylinder.GetAmmoType(i))
+            {
+                case CylinderPower.AmmoType.Normal:
+                    normalCount++;
+                    break;
+                case CylinderPower.AmmoType.Tracer:
+                    tracerCount++;
+                    break;
+                case CylinderPower.AmmoType.Seal:
+                    sealLevelTotal += cylinder.GetSealLevel(i);
+                    break;
+            }
+        }
 
-        await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
+        var blockAmount = IsUpgraded
+            ? (decimal)Math.Ceiling(sealLevelTotal * 1.5m)
+            : sealLevelTotal;
+        if (blockAmount > 0)
+            await CreatureCmd.GainBlock(Owner.Creature, blockAmount, ValueProp.Move, cardPlay);
 
-        if (removedCount > 0)
-            await CardPileCmd.Draw(choiceContext, removedCount, Owner);
+        cylinder.ClearAll();
+        await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, 0, Owner.Creature, this);
 
-        // You cannot draw cards anymore this turn.
-        await PowerCmd.Apply<NoDrawPower>(Owner.Creature, 1, Owner.Creature, this);
+        var drawAmount = IsUpgraded ? normalCount : normalCount / 2;
+        if (drawAmount > 0)
+            await CardPileCmd.Draw(choiceContext, drawAmount, Owner);
+
+        var energyGain = tracerCount / 3;
+        if (energyGain > 0)
+            await PlayerCmd.GainEnergy(energyGain, Owner);
     }
 
     protected override void OnUpgrade()
     {
-        AddKeyword(CardKeyword.Retain);
     }
 }
