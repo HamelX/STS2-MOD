@@ -109,7 +109,7 @@
   "GRAND_CHAMBER.description": "{IfUpgraded:show:봉인탄이 장전되어 있으면 카드 2장을 뽑고, 해당 봉인탄을 발사 칸에 정렬한 뒤 레벨을 1 올립니다. (코스트 1).|봉인탄이 장전되어 있으면 카드 2장을 뽑고, 해당 봉인탄을 발사 칸에 정렬한 뒤 레벨을 1 올립니다.}",
   "DEAD_ANGLE.title": "데드 앵글",
   "DEAD_ANGLE.description": "{IfUpgraded:show:각인 2 소모. 도탄 3 획득. 카드 1장 뽑기. (코스트 0).|각인 2 소모. 도탄 3 획득. 카드 1장 뽑기. }",
-  "RICOCHET_PRIMER.title": "리코셰 프라이머",
+  "RICOCHET_PRIMER.title": "도탄 프라이머",
   "RICOCHET_PRIMER.description": "{IfUpgraded:show:도탄 3 획득. 각인 1 획득.|도탄 2 획득. 각인 1 획득.}",
   "BANK_SHOT.title": "뱅크 샷",
   "BANK_SHOT.description": "{IfUpgraded:show:격발 1회. 도탄이 있으면 도탄 1 소모. 추가로 피해 {Damage:diff()}.|격발 1회. 도탄이 있으면 도탄 1 소모. 추가로 피해 {Damage:diff()}.}",
