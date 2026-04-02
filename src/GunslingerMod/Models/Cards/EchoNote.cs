@@ -12,6 +12,9 @@ public sealed class EchoNote() : CardModel(0, CardType.Skill, CardRarity.Common,
     {
         get
         {
+            if (IsUpgraded)
+                return true;
+
             var imprint = Owner?.Creature?.GetPower<ImprintPower>();
             return imprint != null && imprint.Amount >= 1;
         }
@@ -20,10 +23,14 @@ public sealed class EchoNote() : CardModel(0, CardType.Skill, CardRarity.Common,
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var imprint = Owner.Creature.GetPower<ImprintPower>();
-        if (imprint == null || imprint.Amount < 1)
+        if (imprint != null && imprint.Amount >= 1)
+        {
+            await PowerCmd.Apply<ImprintPower>(Owner.Creature, -1, Owner.Creature, this);
+            await CardPileCmd.Draw(choiceContext, 2, Owner);
             return;
+        }
 
-        await PowerCmd.Apply<ImprintPower>(Owner.Creature, -1, Owner.Creature, this);
-        await CardPileCmd.Draw(choiceContext, IsUpgraded ? 3 : 2, Owner);
+        if (IsUpgraded)
+            await CardPileCmd.Draw(choiceContext, 1, Owner);
     }
 }

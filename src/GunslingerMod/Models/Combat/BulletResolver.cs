@@ -31,13 +31,7 @@ internal static class BulletResolver
 
     public static decimal ResolveBulletEffect(Creature source, CylinderPower.AmmoType ammoType, byte sealLevel, decimal baseDamage)
     {
-        var finalDamage = baseDamage;
-        var bulletTag = GetBulletTag(ammoType);
-
-        if (bulletTag == BulletTag.Seal)
-            finalDamage += source.GetPower<SealRitePower>()?.ConsumeNextSealDamageBonus() ?? 0;
-
-        return finalDamage;
+        return baseDamage;
     }
 
     public static bool TryConsumeCurrentWithSealSkip(
@@ -150,7 +144,10 @@ internal static class BulletResolver
             if (!HasAliveOpponents(source))
                 return;
 
-            await PowerCmd.Apply<ImprintPower>(source, 1, source, cardSource);
+            await ApplyAutomaticImprintGain(source, cardSource, ammoType);
+
+            if (ammoType == CylinderPower.AmmoType.Seal)
+                source.GetPower<SealRitePower>()?.QueueNextSealLevelBonus();
 
             if (!HasAliveOpponents(source))
                 return;
@@ -233,6 +230,38 @@ internal static class BulletResolver
             foreach (var enemy in opponents.Where(e => e.IsAlive && e.CurrentHp > 0))
                 await CreatureCmd.Damage(choiceContext, enemy, explosionDamage, ValueProp.Move, source, cardSource);
         }
+    }
+
+    private static async Task ApplyAutomaticImprintGain(Creature source, CardModel cardSource, CylinderPower.AmmoType ammoType)
+    {
+        var halfUnits = ammoType switch
+        {
+            CylinderPower.AmmoType.Seal => 2,
+            CylinderPower.AmmoType.Normal => 1,
+            CylinderPower.AmmoType.Enhanced => 1,
+            CylinderPower.AmmoType.Penetrator => 1,
+            CylinderPower.AmmoType.Tracer => 1,
+            _ => 0
+        };
+
+        if (halfUnits <= 0)
+            return;
+
+        var halfImprint = source.GetPower<HalfImprintPower>();
+        var totalHalfUnits = (halfImprint?.Amount ?? 0) + halfUnits;
+        if (halfImprint == null)
+            halfImprint = await PowerCmd.Apply<HalfImprintPower>(source, totalHalfUnits, source, cardSource);
+        else
+            halfImprint = await PowerCmd.SetAmount<HalfImprintPower>(source, totalHalfUnits, source, cardSource);
+
+        var imprintGain = totalHalfUnits / 2;
+        var remainder = totalHalfUnits % 2;
+
+        if (imprintGain > 0)
+            await PowerCmd.Apply<ImprintPower>(source, imprintGain, source, cardSource);
+
+        if (halfImprint != null)
+            await PowerCmd.SetAmount<HalfImprintPower>(source, remainder, source, cardSource);
     }
 
     private static async Task TriggerOverclockExtraPull(PlayerChoiceContext choiceContext, Creature source, Creature preferredTarget, CardModel cardSource)

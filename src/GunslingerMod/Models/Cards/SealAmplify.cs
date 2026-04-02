@@ -9,8 +9,10 @@ using GunslingerMod.Models.Powers;
 namespace GunslingerMod.Models.Cards;
 
 // 봉인 증폭
-public sealed class SealAmplify() : CardModel(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+public sealed class SealAmplify() : CardModel(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
 {
+    public override IEnumerable<CardKeyword> CanonicalKeywords => IsUpgraded ? [] : [CardKeyword.Exhaust];
+
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new SealAmplifyAmountVar()
@@ -31,7 +33,10 @@ public sealed class SealAmplify() : CardModel(1, CardType.Skill, CardRarity.Unco
         if (cylinder == null)
             return;
 
-        var increase = (byte)(IsUpgraded ? 5 : 3);
-        cylinder.IncrementSealLevels(increase);
+        var sealIndex = SealShotHelper.FindHighestLevelSealIndex(cylinder);
+        if (sealIndex < 0)
+            return;
+
+        cylinder.IncrementSealLevel(sealIndex, (byte)(IsUpgraded ? 3 : 2));
     }
 }

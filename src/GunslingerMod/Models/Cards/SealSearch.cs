@@ -6,7 +6,7 @@ using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class SealSearch() : CardModel(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+public sealed class SealSearch() : CardModel(0, CardType.Skill, CardRarity.Common, TargetType.None)
 {
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

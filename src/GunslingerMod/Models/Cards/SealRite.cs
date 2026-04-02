@@ -6,7 +6,7 @@ using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class SealRite() : CardModel(1, CardType.Power, CardRarity.Rare, TargetType.None)
+public sealed class SealRite() : CardModel(2, CardType.Power, CardRarity.Uncommon, TargetType.None)
 {
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -28,6 +28,6 @@ public sealed class SealRite() : CardModel(1, CardType.Power, CardRarity.Rare, T
 
     protected override void OnUpgrade()
     {
-        AddKeyword(CardKeyword.Innate);
+        EnergyCost.UpgradeBy(-1);
     }
 }

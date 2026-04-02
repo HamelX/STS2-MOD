@@ -5,7 +5,7 @@ using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class SealOpen() : CardModel(1, CardType.Skill, CardRarity.Rare, TargetType.None)
+public sealed class SealOpen() : CardModel(1, CardType.Skill, CardRarity.Common, TargetType.None)
 {
     protected override bool IsPlayable
     {
@@ -29,8 +29,7 @@ public sealed class SealOpen() : CardModel(1, CardType.Skill, CardRarity.Rare, T
         if (sealIndex != cylinder.ChamberIndex)
             cylinder.SwapChambers(sealIndex, cylinder.ChamberIndex);
 
-        if (IsUpgraded)
-            cylinder.IncrementSealLevels(2);
+        cylinder.IncrementSealLevel(cylinder.ChamberIndex, (byte)(IsUpgraded ? 2 : 1));
 
         return Task.CompletedTask;
     }

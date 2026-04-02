@@ -7,7 +7,7 @@ using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class SealResonance() : CardModel(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+public sealed class SealResonance() : CardModel(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
     protected override bool IsPlayable
     {
@@ -27,17 +27,29 @@ public sealed class SealResonance() : CardModel(1, CardType.Attack, CardRarity.U
         if (cylinder == null)
             return;
 
-        var sealIndex = SealShotHelper.FindHighestLevelSealIndex(cylinder);
-        if (sealIndex < 0)
+        var totalSealLevel = 0;
+        for (var i = 0; i < CylinderPower.MaxRounds; i++)
+        {
+            if (cylinder.GetAmmoType(i) != CylinderPower.AmmoType.Seal)
+                continue;
+
+            totalSealLevel += cylinder.GetSealLevel(i);
+        }
+
+        if (totalSealLevel <= 0)
             return;
 
-        var level = cylinder.GetSealLevel(sealIndex);
-        var damage = level * 2m;
+        var damage = totalSealLevel * (IsUpgraded ? 12m : 9m);
         await CreatureCmd.Damage(choiceContext, cardPlay.Target, damage, ValueProp.Move, Owner.Creature, this);
-    }
 
-    protected override void OnUpgrade()
-    {
-        EnergyCost.UpgradeBy(-1);
+        for (var i = 0; i < CylinderPower.MaxRounds; i++)
+        {
+            if (cylinder.GetAmmoType(i) != CylinderPower.AmmoType.Seal)
+                continue;
+
+            var currentLevel = cylinder.GetSealLevel(i);
+            if (currentLevel > 1)
+                cylinder.ReduceSealLevel(i, (byte)(currentLevel - 1));
+        }
     }
 }
