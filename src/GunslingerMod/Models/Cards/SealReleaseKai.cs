@@ -14,7 +14,7 @@ public sealed class SealReleaseKai() : CardModel(3, CardType.Attack, CardRarity.
 {
     protected override void OnUpgrade()
     {
-        AddKeyword(CardKeyword.Retain);
+        EnergyCost.UpgradeBy(-1);
     }
 
     protected override bool IsPlayable
@@ -32,22 +32,28 @@ public sealed class SealReleaseKai() : CardModel(3, CardType.Attack, CardRarity.
         if (cylinder == null)
             return;
 
-        var sealIdx = FindHighestLevelSealIndex(cylinder);
-        if (sealIdx < 0)
+        var sealsToFire = new List<(CylinderPower.AmmoType AmmoType, byte SealLevel)>();
+        for (var i = 0; i < CylinderPower.MaxRounds; i++)
+        {
+            if (cylinder.GetAmmoType(i) != CylinderPower.AmmoType.Seal)
+                continue;
+
+            sealsToFire.Add((CylinderPower.AmmoType.Seal, cylinder.GetSealLevel(i)));
+        }
+
+        if (sealsToFire.Count == 0)
             return;
 
-        if (sealIdx != cylinder.ChamberIndex)
-            cylinder.SwapChambers(sealIdx, cylinder.ChamberIndex);
-
-        var didFire = BulletResolver.TryConsumeCurrentWithSealSkip(cylinder, this, out var ammoType, out var sealLevel);
+        for (var i = 0; i < CylinderPower.MaxRounds; i++)
+        {
+            if (cylinder.GetAmmoType(i) == CylinderPower.AmmoType.Seal)
+                cylinder.ClearChamberAt(i);
+        }
         await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
-
-        if (!didFire)
-            return;
 
         var combatState = Owner.Creature.CombatState;
         Creature? target = cardPlay.Target;
-        for (var i = 0; i < 2; i++)
+        foreach (var (ammoType, sealLevel) in sealsToFire)
         {
             if (!BulletResolver.ShouldContinueFiring(combatState))
                 return;
@@ -56,33 +62,20 @@ public sealed class SealReleaseKai() : CardModel(3, CardType.Attack, CardRarity.
             if (target == null)
                 return;
 
+            var wasAlive = target.IsAlive;
             var baseDamage = BulletResolver.GetBaseDamage(ammoType, sealLevel);
             await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, baseDamage);
+
+            if (wasAlive && !target.IsAlive)
+            {
+                await PowerCmd.Apply<ImprintPower>(Owner.Creature, IsUpgraded ? 3 : 2, Owner.Creature, this);
+                cylinder.TryLoadOrIncrementSeal((byte)(IsUpgraded ? 2 : 1));
+                await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
+            }
 
             if (!BulletResolver.ShouldContinueFiring(combatState))
                 return;
         }
-    }
-
-    private static int FindHighestLevelSealIndex(CylinderPower cylinder)
-    {
-        var bestIdx = -1;
-        var bestLvl = -1;
-
-        for (var i = 0; i < CylinderPower.MaxRounds; i++)
-        {
-            if (cylinder.GetAmmoType(i) != CylinderPower.AmmoType.Seal)
-                continue;
-
-            var lvl = cylinder.GetSealLevel(i);
-            if (lvl > bestLvl)
-            {
-                bestLvl = lvl;
-                bestIdx = i;
-            }
-        }
-
-        return bestIdx;
     }
 
     private static Creature? GetNextAliveTarget(CombatState? combatState, Creature owner, Creature? currentTarget)

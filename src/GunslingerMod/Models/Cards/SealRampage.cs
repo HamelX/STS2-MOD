@@ -6,7 +6,7 @@ using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class SealRampage() : CardModel(0, CardType.Skill, CardRarity.Rare, TargetType.None)
+public sealed class SealRampage() : CardModel(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
 {
     protected override bool IsPlayable
     {
@@ -27,30 +27,15 @@ public sealed class SealRampage() : CardModel(0, CardType.Skill, CardRarity.Rare
         if (sealIndex < 0)
             return;
 
-        var removedSeals = RemoveLoadedSeals(cylinder);
-        if (removedSeals <= 0)
+        var sealLevel = cylinder.GetSealLevel(sealIndex);
+        if (sealLevel <= 0)
             return;
 
+        var energyGain = Math.Min(IsUpgraded ? 3 : 2, sealLevel);
+        cylinder.ReduceSealLevel(sealIndex, (byte)Math.Max(1, sealLevel / 2));
         await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
-        await PlayerCmd.GainEnergy(removedSeals, Owner);
-
-        if (IsUpgraded)
-            await CardPileCmd.Draw(choiceContext, 1, Owner);
-    }
-
-    private static int RemoveLoadedSeals(CylinderPower cylinder)
-    {
-        var removed = 0;
-        for (var i = 0; i < CylinderPower.MaxRounds; i++)
-        {
-            if (cylinder.GetAmmoType(i) != CylinderPower.AmmoType.Seal)
-                continue;
-
-            cylinder.ClearChamberAt(i);
-            removed++;
-        }
-
-        return removed;
+        if (energyGain > 0)
+            await PlayerCmd.GainEnergy(energyGain, Owner);
     }
 
     private static int FindHighestLevelSealIndex(CylinderPower cylinder)

@@ -9,7 +9,7 @@ using GunslingerMod.Models.Powers;
 namespace GunslingerMod.Models.Cards;
 
 // 봉인 통찰
-public sealed class SealInsight() : CardModel(1, CardType.Skill, CardRarity.Rare, TargetType.None)
+public sealed class SealInsight() : CardModel(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
@@ -31,24 +31,16 @@ public sealed class SealInsight() : CardModel(1, CardType.Skill, CardRarity.Rare
 
     internal static int GetDrawCount(CylinderPower cylinder, bool isUpgraded)
     {
-        var baseDraw = isUpgraded ? 2 : 1;
-
-        var bestLevel = 0;
+        var totalSealLevels = 0;
         for (var i = 0; i < CylinderPower.MaxRounds; i++)
         {
             if (cylinder.GetAmmoType(i) != CylinderPower.AmmoType.Seal)
                 continue;
 
-            var level = cylinder.GetSealLevel(i);
-            if (level > bestLevel)
-                bestLevel = level;
+            totalSealLevels += cylinder.GetSealLevel(i);
         }
 
-        if (bestLevel >= 7)
-            return baseDraw + 2;
-        if (bestLevel > 0)
-            return baseDraw + 1;
-
-        return baseDraw;
+        var threshold = isUpgraded ? 2 : 4;
+        return totalSealLevels >= threshold ? 4 : 2;
     }
 }

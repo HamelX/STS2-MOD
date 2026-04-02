@@ -8,7 +8,7 @@ using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class GrandRite() : CardModel(2, CardType.Skill, CardRarity.Rare, TargetType.AnyEnemy)
+public sealed class GrandRite() : CardModel(3, CardType.Skill, CardRarity.Rare, TargetType.AnyEnemy)
 {
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -17,6 +17,14 @@ public sealed class GrandRite() : CardModel(2, CardType.Skill, CardRarity.Rare, 
         var cylinder = Owner.Creature.GetPower<CylinderPower>();
         if (cylinder == null)
             return;
+
+        var sealIndices = Enumerable.Range(0, CylinderPower.MaxRounds)
+            .Where(i => cylinder.GetAmmoType(i) == CylinderPower.AmmoType.Seal)
+            .ToList();
+        if (sealIndices.Count == 0)
+            return;
+
+        DistributeSealLevels(cylinder, sealIndices, IsUpgraded ? 3 : 2);
 
         var sealIndex = FindHighestLevelSealIndex(cylinder);
         if (sealIndex < 0)
@@ -27,8 +35,6 @@ public sealed class GrandRite() : CardModel(2, CardType.Skill, CardRarity.Rare, 
 
         if (cylinder.GetAmmoType(cylinder.ChamberIndex) != CylinderPower.AmmoType.Seal)
             return;
-
-        cylinder.IncrementSealLevel(cylinder.ChamberIndex, (byte)(IsUpgraded ? 3 : 2));
 
         var target = cardPlay.Target.IsAlive
             ? cardPlay.Target
@@ -47,6 +53,19 @@ public sealed class GrandRite() : CardModel(2, CardType.Skill, CardRarity.Rare, 
 
         var damage = Math.Max(0m, BulletResolver.GetBaseDamage(ammoType, sealLevel));
         await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, damage);
+    }
+
+    private static void DistributeSealLevels(CylinderPower cylinder, IReadOnlyList<int> sealIndices, int totalBonus)
+    {
+        for (var i = 0; i < totalBonus; i++)
+        {
+            var targetIndex = sealIndices
+                .OrderBy(idx => cylinder.GetSealLevel(idx))
+                .ThenBy(idx => idx == cylinder.ChamberIndex ? 0 : 1)
+                .ThenBy(idx => idx)
+                .First();
+            cylinder.IncrementSealLevel(targetIndex, 1);
+        }
     }
 
     private static int FindHighestLevelSealIndex(CylinderPower cylinder)
