@@ -7,7 +7,7 @@ using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class ExecutionShot() : CardModel(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+public sealed class ExecutionShot() : CardModel(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -26,11 +26,14 @@ public sealed class ExecutionShot() : CardModel(2, CardType.Attack, CardRarity.R
         if (!didFire)
             return;
 
-        var baseDamage = BulletResolver.GetBaseDamage(ammoType, sealLevel);
+        var damage = IsUpgraded ? 14m : 10m;
 
         if (target.CurrentHp * 2 <= target.MaxHp)
-            baseDamage *= IsUpgraded ? 3m : 2m;
+        {
+            damage += IsUpgraded ? 14m : 12m;
+            await PowerCmd.Apply<ImprintPower>(Owner.Creature, 2, Owner.Creature, this);
+        }
 
-        await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, baseDamage);
+        await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, damage);
     }
 }

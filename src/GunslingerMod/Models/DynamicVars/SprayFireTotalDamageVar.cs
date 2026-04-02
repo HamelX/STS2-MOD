@@ -44,9 +44,6 @@ public sealed class SprayFireTotalDamageVar : DamageVar
             var shotDamage = BulletResolver.GetBaseDamage(ammoType, sealLevel);
 
             totalDamage += shotDamage;
-
-            if (ammoType == CylinderPower.AmmoType.Seal && sealLevel >= CylinderPower.SealThresholdExtraHit)
-                totalDamage += shotDamage;
         }
 
         BaseValue = totalDamage;

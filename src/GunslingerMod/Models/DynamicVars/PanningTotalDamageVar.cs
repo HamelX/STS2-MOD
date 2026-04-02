@@ -45,9 +45,6 @@ public sealed class PanningTotalDamageVar : DamageVar
             var shotDamage = BulletResolver.GetBaseDamage(ammoType, sealLevel) + (card.IsUpgraded ? 6m : 4m);
 
             totalDamage += shotDamage;
-
-            if (ammoType == CylinderPower.AmmoType.Seal && sealLevel >= CylinderPower.SealThresholdExtraHit)
-                totalDamage += shotDamage;
         }
         
         // Update BaseValue so DamageVar base class applies Strength/Enchantments correctly
