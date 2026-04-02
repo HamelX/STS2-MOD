@@ -1,0 +1,12 @@
+{
+  "id": "GunslingerMod",
+  "name": "Gunslinger Mod",
+  "author": "Hamel",
+  "version": "1.0.0",
+  "description": "Adds the Gunslinger character.",
+  "has_dll": true,
+  "has_pck": true,
+  "dependencies": [
+    "BaseLib"
+  ]
+}
