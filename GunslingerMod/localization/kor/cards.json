@@ -60,7 +60,7 @@
   "QUICK_RACK.title": "퀵 랙",
   "QUICK_RACK.description": "{IfUpgraded:show:각인 1 소모. 추적탄 2발 장전. 사냥개시 상태면 격발 2회.|각인 1 소모. 추적탄 2발 장전. 사냥개시 상태면 격발 1회.}",
   "HOT_CHAMBER.title": "핫 챔버",
-  "HOT_CHAMBER.description": "{IfUpgraded:show:추적탄 2발 장전. 사냥개시 상태면 카드 2장 뽑기.|각인 1 소모. 추적탄 2발 장전. 사냥개시 상태면 카드 2장 뽑기.}",
+  "HOT_CHAMBER.description": "{IfUpgraded:show:추적탄 2발 장전. 이번 턴 이미 추적탄을 발사했다면 카드 2장을 뽑습니다.|각인 1 소모. 추적탄 2발 장전. 이번 턴 이미 추적탄을 발사했다면 카드 2장을 뽑습니다.}",
   "CHAIN_BURST.title": "체인 버스트",
   "CHAIN_BURST.description": "{IfUpgraded:show:각인 2 소모. 방아쇠 1회. 첫 성공 발사가 추적탄이면 추가 3회.|각인 2 소모. 방아쇠 1회. 첫 성공 발사가 추적탄이면 추가 2회.}",
   "OVERCLOCK_DRUM.title": "오버클록 드럼",

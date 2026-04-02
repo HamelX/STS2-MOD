@@ -60,7 +60,7 @@
   "QUICK_RACK.title": "クイックラック",
   "QUICK_RACK.description": "{IfUpgraded:show:刻印1を消費。トレーサー弾を2発装填。ハント開始状態ならトリガープル2回。|刻印1を消費。トレーサー弾を2発装填。ハント開始状態ならトリガープル1回。}",
   "HOT_CHAMBER.title": "ホットチャンバー",
-  "HOT_CHAMBER.description": "{IfUpgraded:show:トレーサー弾を2発装填。ハント開始ONならカードを2枚引く。|刻印1を消費。トレーサー弾を2発装填。ハント開始ONならカードを2枚引く。}",
+  "HOT_CHAMBER.description": "{IfUpgraded:show:トレーサー弾を2発装填。このターンすでに跳弾を発射していたならカードを2枚引く。|刻印1を消費。トレーサー弾を2発装填。このターンすでに跳弾を発射していたならカードを2枚引く。}",
   "CHAIN_BURST.title": "チェインバースト",
   "CHAIN_BURST.description": "{IfUpgraded:show:刻印2消費。引き金を1回引く。Tracer RhythmがONなら追加で2回。|刻印2消費。引き金を1回引く。Tracer RhythmがONなら追加で1回。}",
   "OVERCLOCK_DRUM.title": "オーバークロックドラム",

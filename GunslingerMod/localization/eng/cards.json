@@ -60,7 +60,7 @@
   "QUICK_RACK.title": "Quick Rack",
   "QUICK_RACK.description": "{IfUpgraded:show:Spend 1 Imprint. Load 2 Tracer rounds. If Hunt-start is active, Trigger Pull 2 times.|Spend 1 Imprint. Load 2 Tracer rounds. If Hunt-start is active, Trigger Pull 1 time.}",
   "HOT_CHAMBER.title": "Hot Chamber",
-  "HOT_CHAMBER.description": "{IfUpgraded:show:Load 2 Tracer bullets. If Hunt-start is ON, draw 2 cards.|Spend 1 Imprint. Load 2 Tracer bullets. If Hunt-start is ON, draw 2 cards.}",
+  "HOT_CHAMBER.description": "{IfUpgraded:show:Load 2 Tracer bullets. If you have already fired a Tracer shot this turn, draw 2 cards.|Spend 1 Imprint. Load 2 Tracer bullets. If you have already fired a Tracer shot this turn, draw 2 cards.}",
   "CHAIN_BURST.title": "Chain Burst",
   "CHAIN_BURST.description": "{IfUpgraded:show:Spend 2 Imprint. Trigger Pull 1 time. If the first successful shot is Tracer, trigger pull +3 additional times.|Spend 2 Imprint. Trigger Pull 1 time. If the first successful shot is Tracer, trigger pull +2 additional times.}",
   "OVERCLOCK_DRUM.title": "Overclock Drum",
