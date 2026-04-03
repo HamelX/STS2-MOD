@@ -15,7 +15,7 @@ public sealed class DefendGunslinger : CardModel
 
     protected override HashSet<CardTag> CanonicalTags => new() { CardTag.Defend };
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(8m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(5m, ValueProp.Move)];
 
     public DefendGunslinger()
         : base(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
@@ -29,6 +29,6 @@ public sealed class DefendGunslinger : CardModel
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Block.UpgradeValueBy(4m);
+        DynamicVars.Block.UpgradeValueBy(3m);
     }
 }

@@ -103,6 +103,10 @@ public sealed class Gunslinger : CustomCharacterModel
 
     public override Color RemoteTargetingLineOutline => new("1F1F1F");
 
+    public override string CharacterSelectSfx => "event:/sfx/characters/silent/silent_select";
+
+    public override string CharacterTransitionSfx => "event:/sfx/ui/wipe_silent";
+
     public override List<string> GetArchitectAttackVfx()
     {
         var num = 3;

@@ -9,6 +9,8 @@ public sealed class GunslingerCardPool : CustomCardPoolModel
 {
     public override string Title => "gunslinger";
 
+    public override string EnergyColorName => "gunslinger";
+
     public override string CardFrameMaterialPath => "card_frame_purple";
 
     public override Color ShaderColor => Gunslinger.Color;

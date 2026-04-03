@@ -25,14 +25,7 @@ public sealed class SealAssimilation() : CardModel(2, CardType.Skill, CardRarity
         if (cylinder == null)
             return;
 
-        var bestIdx = -1;
         var bestLvl = -1;
-
-        if (cylinder.GetAmmoType(cylinder.ChamberIndex) == CylinderPower.AmmoType.Seal)
-        {
-            bestIdx = cylinder.ChamberIndex;
-            bestLvl = cylinder.GetSealLevel(cylinder.ChamberIndex);
-        }
 
         for (var i = 0; i < CylinderPower.MaxRounds; i++)
         {
@@ -43,30 +36,20 @@ public sealed class SealAssimilation() : CardModel(2, CardType.Skill, CardRarity
             if (lvl > bestLvl)
             {
                 bestLvl = lvl;
-                bestIdx = i;
             }
         }
 
-        if (bestIdx < 0)
+        if (bestLvl <= 0)
             return;
 
-        // Rebuild pattern by user direction:
-        // keep only the chosen highest-level Seal bullet,
-        // clear all other chambers, then fill them with temporary Seal bullets at that same level.
         for (var i = 0; i < CylinderPower.MaxRounds; i++)
         {
-            if (i == bestIdx)
+            if (cylinder.GetAmmoType(i) != CylinderPower.AmmoType.Seal)
                 continue;
 
-            cylinder.ClearChamberAt(i);
-        }
-
-        for (var i = 0; i < CylinderPower.MaxRounds; i++)
-        {
-            if (i == bestIdx)
-                continue;
-
-            cylinder.TryLoadTempSealInto(i, (byte)bestLvl);
+            var current = cylinder.GetSealLevel(i);
+            if (current < bestLvl)
+                cylinder.IncrementSealLevel(i, (byte)(bestLvl - current));
         }
 
         await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
