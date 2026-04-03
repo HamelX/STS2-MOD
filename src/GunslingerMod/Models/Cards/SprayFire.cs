@@ -27,16 +27,7 @@ public sealed class SprayFire() : CardModel(2, CardType.Attack, CardRarity.Commo
             return;
 
         if (cylinder.Amount <= 0)
-        {
-            var opponents = Owner.Creature.CombatState?.GetOpponentsOf(Owner.Creature).Where(c => c.IsAlive && c.CurrentHp > 0).ToList();
-            if (opponents == null)
-                return;
-
-            var dryFireDamage = IsUpgraded ? 12m : 8m;
-            foreach (var enemy in opponents)
-                await CreatureCmd.Damage(choiceContext, enemy, dryFireDamage, MegaCrit.Sts2.Core.ValueProps.ValueProp.Move, Owner.Creature, this);
             return;
-        }
 
         var shotsFired = 0;
 

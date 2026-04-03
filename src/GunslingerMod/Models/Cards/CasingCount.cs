@@ -13,9 +13,9 @@ public sealed class CasingCount() : CardModel(1, CardType.Skill, CardRarity.Unco
     {
         var cylinder = Owner.Creature.GetPower<CylinderPower>();
         var emptyChambers = cylinder?.CountEmpty() ?? 0;
-        var imprintGain = Math.Min(3, Math.Max(0, emptyChambers));
-        if (imprintGain > 0)
-            await PowerCmd.Apply<ImprintPower>(Owner.Creature, imprintGain, Owner.Creature, this);
+        var ricochetGain = Math.Min(3, Math.Max(0, emptyChambers));
+        if (ricochetGain > 0)
+            await PowerCmd.Apply<RicochetPower>(Owner.Creature, ricochetGain, Owner.Creature, this);
 
         if (IsUpgraded)
             await CardPileCmd.Draw(choiceContext, 1, Owner);

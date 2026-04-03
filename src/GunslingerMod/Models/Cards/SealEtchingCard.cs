@@ -6,27 +6,21 @@ using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class ImprintSeal() : CardModel(1, CardType.Skill, CardRarity.Uncommon, TargetType.None), IImprintConsumerCard
+public sealed class SealEtching() : CardModel(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
 {
-    protected override bool IsPlayable => (Owner?.Creature?.GetPower<ImprintPower>()?.Amount ?? 0) >= (IsUpgraded ? 1 : 2);
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        var imprintCost = IsUpgraded ? 1 : 2;
-        var imprint = Owner.Creature.GetPower<ImprintPower>()?.Amount ?? 0;
-        if (imprint < imprintCost)
-            return;
-
-        await PowerCmd.Apply<ImprintPower>(Owner.Creature, -imprintCost, Owner.Creature, this);
-
         var cylinder = Owner.Creature.GetPower<CylinderPower>();
         if (cylinder == null)
             return;
 
+        var amount = (byte)(IsUpgraded ? 2 : 1);
+
         for (var i = 0; i < CylinderPower.MaxRounds; i++)
         {
             if (cylinder.GetAmmoType(i) == CylinderPower.AmmoType.Seal)
-                cylinder.IncrementSealLevel(i, (byte)imprintCost);
+                cylinder.IncrementSealLevel(i, amount);
         }
 
         await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);

@@ -3,7 +3,7 @@ using MegaCrit.Sts2.Core.Models;
 
 namespace GunslingerMod.Models.Powers;
 
-public sealed class ImprintIgnitionPower : PowerModel
+public sealed class BulletIgnitionPower : PowerModel
 {
     public override PowerType Type => PowerType.Buff;
 

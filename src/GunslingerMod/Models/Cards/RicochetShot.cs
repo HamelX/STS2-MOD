@@ -20,16 +20,19 @@ public sealed class RicochetShot() : CardModel(1, CardType.Attack, CardRarity.Un
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
-
-        await CreatureCmd.Damage(choiceContext, cardPlay.Target, DynamicVars.Damage.BaseValue, ValueProp.Move, Owner.Creature, this);
-
-        var imprint = Owner.Creature.GetPower<ImprintPower>();
-        if (imprint == null || imprint.Amount < 1)
+        var source = Owner?.Creature;
+        if (source == null)
             return;
 
-        await PowerCmd.Apply<ImprintPower>(Owner.Creature, -1, Owner.Creature, this);
+        await CreatureCmd.Damage(choiceContext, cardPlay.Target, DynamicVars.Damage.BaseValue, ValueProp.Move, source, this);
 
-        var opponents = Owner.Creature.CombatState?.GetOpponentsOf(Owner.Creature)
+        var ricochet = source.GetPower<RicochetPower>();
+        if (ricochet == null || ricochet.Amount < 1)
+            return;
+
+        await PowerCmd.Apply<RicochetPower>(source, -1, source, this);
+
+        var opponents = source.CombatState?.GetOpponentsOf(source)
             .Where(c => c.IsAlive && c.CurrentHp > 0)
             .ToList();
         if (opponents == null || opponents.Count == 0)
@@ -40,10 +43,10 @@ public sealed class RicochetShot() : CardModel(1, CardType.Attack, CardRarity.Un
         for (var i = 0; i < 2; i++)
         {
             var target = rng?.NextItem(opponents) ?? opponents[0];
-            if (target == null || !target.IsAlive || target.CurrentHp <= 0)
+            if (!target.IsAlive || target.CurrentHp <= 0)
                 continue;
 
-            await CreatureCmd.Damage(choiceContext, target, bounceDamage, ValueProp.Move, Owner.Creature, this);
+            await CreatureCmd.Damage(choiceContext, target, bounceDamage, ValueProp.Move, source, this);
         }
     }
 

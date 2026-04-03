@@ -3,9 +3,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.ValueProps;
 using GunslingerMod.Models.Powers;
-using Godot;
 
 namespace GunslingerMod.Models.Cards;
 
@@ -27,22 +25,7 @@ public sealed class SealPressure() : CardModel(1, CardType.Skill, CardRarity.Com
         }
 
         if (loadedNewSeal)
-        {
-            GD.Print("[Gunslinger] SealPressure loaded new Seal: granting SealShot");
             await SealShotHelper.GrantTemporaryToHand(choiceContext, this);
-        }
-
-        var maxSealLevel = 0;
-        for (var i = 0; i < CylinderPower.MaxRounds; i++)
-        {
-            if (cylinder.GetAmmoType(i) != CylinderPower.AmmoType.Seal)
-                continue;
-
-            maxSealLevel = Math.Max(maxSealLevel, cylinder.GetSealLevel(i));
-        }
-
-        if (maxSealLevel >= 2)
-            await CreatureCmd.GainBlock(Owner.Creature, maxSealLevel, ValueProp.Move, cardPlay);
 
         await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
     }

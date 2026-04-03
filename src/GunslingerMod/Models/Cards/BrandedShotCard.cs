@@ -30,7 +30,6 @@ public sealed class BrandedShot() : CardModel(1, CardType.Attack, CardRarity.Com
         var damage = Math.Max(0m, BulletResolver.GetBaseDamage(ammoType, sealLevel));
         await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, damage);
 
-        await PowerCmd.Apply<RicochetPower>(Owner.Creature, 1, Owner.Creature, this);
-        await PowerCmd.Apply<ImprintPower>(Owner.Creature, IsUpgraded ? 2 : 1, Owner.Creature, this);
+        await PowerCmd.Apply<RicochetPower>(Owner.Creature, IsUpgraded ? 2 : 1, Owner.Creature, this);
     }
 }

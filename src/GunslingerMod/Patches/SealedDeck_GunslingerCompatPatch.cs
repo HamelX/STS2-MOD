@@ -1,5 +1,7 @@
-﻿using HarmonyLib;
+using System.Globalization;
 using Godot;
+using GunslingerMod.Models.Characters;
+using HarmonyLib;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -11,7 +13,6 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Modifiers;
 using MegaCrit.Sts2.Core.Models.Relics;
 using MegaCrit.Sts2.Core.Runs;
-using GunslingerMod.Models.Characters;
 
 namespace GunslingerMod.Patches;
 
@@ -57,7 +58,7 @@ public static class SealedDeck_GunslingerCompatPatch
         var candidateCount = System.Math.Min(30, possible.Count);
         var pickCount = System.Math.Min(10, candidateCount);
 
-        Godot.GD.Print($"[Gunslinger] SEALED_DECK compat: possible={possible.Count}, candidates={candidateCount}, pick={pickCount}");
+        GD.Print($"[Gunslinger] SEALED_DECK compat: possible={possible.Count}, candidates={candidateCount}, pick={pickCount}");
 
         var rewards = CardFactory.CreateForReward(player, candidateCount, options).ToList();
         rewards = rewards.OrderBy(r => r.Card.Rarity).ThenBy(r => r.Card.Title).ToList();
@@ -65,7 +66,8 @@ public static class SealedDeck_GunslingerCompatPatch
         var prefs = new CardSelectorPrefs(new LocString("modifiers", "SEALED_DECK.selectionPrompt"), pickCount)
         {
             Cancelable = false,
-            RequireManualConfirmation = true
+            RequireManualConfirmation = true,
+            Comparison = CompareCards
         };
 
         var chosen = (await CardSelectCmd.FromSimpleGridForRewards(
@@ -80,5 +82,13 @@ public static class SealedDeck_GunslingerCompatPatch
         foreach (var p in player.RunState.Players)
             p.RelicGrabBag.Remove<PandorasBox>();
         player.RunState.SharedRelicGrabBag.Remove<PandorasBox>();
+    }
+
+    private static int CompareCards(CardModel card1, CardModel card2)
+    {
+        if (card1.Rarity != card2.Rarity)
+            return card1.Rarity.CompareTo(card2.Rarity);
+
+        return string.Compare(card1.Title, card2.Title, LocManager.Instance.CultureInfo, CompareOptions.None);
     }
 }

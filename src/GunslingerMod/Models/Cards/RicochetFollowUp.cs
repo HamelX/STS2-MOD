@@ -18,9 +18,7 @@ public sealed class RicochetFollowUp() : CardModel(1, CardType.Attack, CardRarit
         if (cylinder == null)
             return;
 
-        var hasRicochet =
-            (Owner.Creature.GetPower<RicochetPower>()?.Amount ?? 0) > 0 ||
-            (Owner.Creature.GetPower<RicochetImprintPower>()?.Amount ?? 0) > 0;
+        var hasRicochet = (Owner.Creature.GetPower<RicochetPower>()?.Amount ?? 0) > 0;
 
         var pulls = 1;
         if (hasRicochet && IsUpgraded)
@@ -46,9 +44,6 @@ public sealed class RicochetFollowUp() : CardModel(1, CardType.Attack, CardRarit
         }
 
         if (hasRicochet && !IsUpgraded)
-        {
             await CardPileCmd.Draw(choiceContext, 1, Owner);
-            await PowerCmd.Apply<ImprintPower>(Owner.Creature, 1, Owner.Creature, this);
-        }
     }
 }

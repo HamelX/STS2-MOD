@@ -35,6 +35,7 @@ public sealed class Shoot() : CardModel(1, CardType.Attack, CardRarity.Basic, Ta
             return;
         }
 
-        await CreatureCmd.Damage(choiceContext, target, IsUpgraded ? 9m : 5m, MegaCrit.Sts2.Core.ValueProps.ValueProp.Move, Owner.Creature, this);
+        // A dry fire still rotates the cylinder, but does not grant fallback damage.
+        return;
     }
 }

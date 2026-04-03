@@ -6,10 +6,10 @@ using MegaCrit.Sts2.Core.Models;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class ImprintIgnition() : CardModel(2, CardType.Power, CardRarity.Rare, TargetType.None)
+public sealed class BulletIgnition() : CardModel(2, CardType.Power, CardRarity.Rare, TargetType.None)
 {
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        await PowerCmd.Apply<ImprintIgnitionPower>(Owner.Creature, IsUpgraded ? 2 : 1, Owner.Creature, this);
+        await PowerCmd.Apply<BulletIgnitionPower>(Owner.Creature, IsUpgraded ? 2 : 1, Owner.Creature, this);
     }
 }

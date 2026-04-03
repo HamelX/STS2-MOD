@@ -136,7 +136,7 @@ internal static class BulletResolver
                 ((source.GetPower<TracerFiredThisTurnPower>()?.Amount ?? 0) <= 0);
 
             var finalDamage = ResolveBulletEffect(source, ammoType, sealLevel, damage);
-            finalDamage += source.GetPower<ImprintIgnitionPower>()?.Amount ?? 0;
+            finalDamage += source.GetPower<BulletIgnitionPower>()?.Amount ?? 0;
             if (isFirstTracerShotThisTurn && source.GetPower<OverclockDrumPower>()?.Amount > 0)
                 finalDamage += OverclockDrumPower.FirstTracerDamageBonus;
 
@@ -152,8 +152,6 @@ internal static class BulletResolver
 
             if (!HasAliveOpponents(source))
                 return;
-
-            await ApplyAutomaticImprintGain(source, cardSource, ammoType);
 
             if (ammoType == CylinderPower.AmmoType.Seal)
                 source.GetPower<SealRitePower>()?.QueueNextSealLevelBonus();
@@ -173,7 +171,7 @@ internal static class BulletResolver
                 if (source.Player != null)
                     await PlayerCmd.GainEnergy(overclockCharge, source.Player);
 
-                await PowerCmd.Apply<ImprintPower>(source, 1, source, cardSource);
+                await PowerCmd.Apply<RicochetPower>(source, 1, source, cardSource);
             }
 
             if (HotEjectorRelic.CanTriggerFor(source) && source.Player != null)
@@ -198,7 +196,7 @@ internal static class BulletResolver
                         if (source.Player != null)
                             await CardPileCmd.Draw(choiceContext, 1, source.Player);
 
-                        await PowerCmd.Apply<ImprintPower>(source, ballisticCompiler, source, cardSource);
+                        await PowerCmd.Apply<RicochetPower>(source, ballisticCompiler, source, cardSource);
                     }
                 }
             }
@@ -239,38 +237,6 @@ internal static class BulletResolver
             var vulnerableAmount = sealLevel >= CylinderPower.SealThresholdFrail ? 2 : 1;
             await PowerCmd.Apply<VulnerablePower>(target, vulnerableAmount, source, cardSource);
         }
-    }
-
-    private static async Task ApplyAutomaticImprintGain(Creature source, CardModel cardSource, CylinderPower.AmmoType ammoType)
-    {
-        var halfUnits = ammoType switch
-        {
-            CylinderPower.AmmoType.Seal => 2,
-            CylinderPower.AmmoType.Normal => 1,
-            CylinderPower.AmmoType.Enhanced => 1,
-            CylinderPower.AmmoType.Penetrator => 1,
-            CylinderPower.AmmoType.Tracer => 1,
-            _ => 0
-        };
-
-        if (halfUnits <= 0)
-            return;
-
-        var halfImprint = source.GetPower<HalfImprintPower>();
-        var totalHalfUnits = (halfImprint?.Amount ?? 0) + halfUnits;
-        if (halfImprint == null)
-            halfImprint = await PowerCmd.Apply<HalfImprintPower>(source, totalHalfUnits, source, cardSource);
-        else
-            halfImprint = await PowerCmd.SetAmount<HalfImprintPower>(source, totalHalfUnits, source, cardSource);
-
-        var imprintGain = totalHalfUnits / 2;
-        var remainder = totalHalfUnits % 2;
-
-        if (imprintGain > 0)
-            await PowerCmd.Apply<ImprintPower>(source, imprintGain, source, cardSource);
-
-        if (halfImprint != null)
-            await PowerCmd.SetAmount<HalfImprintPower>(source, remainder, source, cardSource);
     }
 
     public static bool HasAliveOpponents(Creature source)

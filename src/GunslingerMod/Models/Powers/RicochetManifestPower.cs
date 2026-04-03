@@ -7,7 +7,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace GunslingerMod.Models.Powers;
 
-public sealed class RicochetImprintPower : PowerModel
+public sealed class RicochetManifestPower : PowerModel
 {
     public decimal DamagePerTrigger { get; private set; } = 5m;
 
@@ -28,7 +28,8 @@ public sealed class RicochetImprintPower : PowerModel
         if (Owner == null || Owner.Side != side || Amount <= 0 || !Owner.IsAlive || Owner.CurrentHp <= 0)
             return;
 
-        await CreatureCmd.Damage(null, Owner, DamagePerTrigger, ValueProp.Move, Owner, null);
+        var owner = Owner;
+        await CreatureCmd.Damage(null!, owner, DamagePerTrigger, ValueProp.Move, owner, null);
         await PowerCmd.Decrement(this);
     }
 }

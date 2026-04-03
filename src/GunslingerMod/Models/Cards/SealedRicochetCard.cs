@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using GunslingerMod.Models.Combat;
 using GunslingerMod.Models.Powers;
+using MegaCrit.Sts2.Core.ValueProps;
 
 namespace GunslingerMod.Models.Cards;
 
@@ -19,7 +20,10 @@ public sealed class SealedRicochet() : CardModel(1, CardType.Attack, CardRarity.
             return;
 
         var sealIndex = FindHighestLevelSealIndex(cylinder);
-        if (sealIndex >= 0 && sealIndex != cylinder.ChamberIndex)
+        if (sealIndex < 0)
+            return;
+
+        if (sealIndex != cylinder.ChamberIndex)
             cylinder.SwapChambers(sealIndex, cylinder.ChamberIndex);
 
         var target = BulletResolver.ResolveAliveTarget(Owner.Creature, cardPlay.Target);
@@ -34,12 +38,8 @@ public sealed class SealedRicochet() : CardModel(1, CardType.Attack, CardRarity.
         var damage = Math.Max(0m, BulletResolver.GetBaseDamage(ammoType, sealLevel));
         await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, damage);
 
-        var levelForImprint = sealLevel;
-        if (IsUpgraded && levelForImprint == 0)
-            levelForImprint = 1;
-
-        if (levelForImprint >= 2 || IsUpgraded)
-            await PowerCmd.Apply<ImprintPower>(Owner.Creature, levelForImprint, Owner.Creature, this);
+        if (sealLevel > 0)
+            await CreatureCmd.GainBlock(Owner.Creature, sealLevel, ValueProp.Move, cardPlay);
     }
 
     private static int FindHighestLevelSealIndex(CylinderPower cylinder)

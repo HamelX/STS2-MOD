@@ -18,8 +18,8 @@ public sealed class TracerBrand() : CardModel(1, CardType.Skill, CardRarity.Comm
         cylinder.TryLoadNext(CylinderPower.AmmoType.Tracer);
         await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
 
-        var ricochetTargets = Owner.Creature.CombatState?.GetOpponentsOf(Owner.Creature).Count(c => c.IsAlive && c.CurrentHp > 0) ?? 0;
-        if (ricochetTargets > 0)
-            await PowerCmd.Apply<ImprintPower>(Owner.Creature, ricochetTargets * (IsUpgraded ? 2 : 1), Owner.Creature, this);
+        var livingEnemies = Owner.Creature.CombatState?.GetOpponentsOf(Owner.Creature).Count(c => c.IsAlive && c.CurrentHp > 0) ?? 0;
+        if (livingEnemies > 0)
+            await PowerCmd.Apply<RicochetPower>(Owner.Creature, livingEnemies * (IsUpgraded ? 2 : 1), Owner.Creature, this);
     }
 }

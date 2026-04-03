@@ -26,12 +26,7 @@ public sealed class Panning() : CardModel(1, CardType.Attack, CardRarity.Common,
             return;
 
         if (cylinder.Amount <= 0)
-        {
-            var dryTarget = BulletResolver.ResolveAliveTarget(Owner.Creature, preferredTarget);
-            if (dryTarget != null)
-                await CreatureCmd.Damage(choiceContext, dryTarget, IsUpgraded ? 8m : 6m, MegaCrit.Sts2.Core.ValueProps.ValueProp.Move, Owner.Creature, this);
             return;
-        }
 
         for (var i = 0; i < 6; i++)
         {

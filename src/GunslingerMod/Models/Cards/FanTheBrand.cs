@@ -32,7 +32,12 @@ public sealed class FanTheBrand() : CardModel(1, CardType.Attack, CardRarity.Com
         if (!target.IsAlive)
             return;
 
-        await PowerCmd.Apply<RicochetPower>(Owner.Creature, IsUpgraded ? 2 : 1, Owner.Creature, this);
-        await PowerCmd.Apply<ImprintPower>(Owner.Creature, 1, Owner.Creature, this);
+        var ricochetGain = IsUpgraded ? 1 : 0;
+        if (ammoType == CylinderPower.AmmoType.Tracer)
+            ricochetGain += 2;
+        else
+            ricochetGain += 1;
+
+        await PowerCmd.Apply<RicochetPower>(Owner.Creature, ricochetGain, Owner.Creature, this);
     }
 }

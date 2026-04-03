@@ -25,8 +25,8 @@ public sealed class ReadTheMark() : CardModel(1, CardType.Skill, CardRarity.Comm
         if (cylinder == null)
             return;
 
-        var imprintAmount = Owner.Creature.GetPower<ImprintPower>()?.Amount ?? 0;
-        if (IsUpgraded || imprintAmount >= 1)
+        var ricochetAmount = Owner.Creature.GetPower<RicochetPower>()?.Amount ?? 0;
+        if (IsUpgraded || ricochetAmount >= 1)
         {
             await CardPileCmd.Draw(choiceContext, 2, Owner);
             cylinder.AdvanceChamber();

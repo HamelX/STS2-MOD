@@ -9,10 +9,8 @@ using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class WalkingFire() : CardModel(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy), IImprintConsumerCard
+public sealed class WalkingFire() : CardModel(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
-    protected override bool IsPlayable => (Owner?.Creature?.GetPower<ImprintPower>()?.Amount ?? 0) >= 3;
-
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
@@ -20,8 +18,6 @@ public sealed class WalkingFire() : CardModel(1, CardType.Attack, CardRarity.Unc
         var cylinder = Owner.Creature.GetPower<CylinderPower>();
         if (cylinder == null)
             return;
-
-        await PowerCmd.Apply<ImprintPower>(Owner.Creature, -3, Owner.Creature, this);
 
         var pulls = IsUpgraded ? 3 : 2;
         var anyShotSucceeded = false;

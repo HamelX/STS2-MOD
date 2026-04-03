@@ -7,7 +7,7 @@ using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class ImprintManifestRicochet() : CardModel(1, CardType.Skill, CardRarity.Rare, TargetType.AnyEnemy)
+public sealed class RicochetManifest() : CardModel(1, CardType.Skill, CardRarity.Rare, TargetType.AnyEnemy)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -15,8 +15,8 @@ public sealed class ImprintManifestRicochet() : CardModel(1, CardType.Skill, Car
     {
         get
         {
-            var imprint = Owner?.Creature?.GetPower<ImprintPower>();
-            return imprint != null && imprint.Amount >= 1;
+            var ricochet = Owner?.Creature?.GetPower<RicochetPower>();
+            return ricochet != null && ricochet.Amount >= 1;
         }
     }
 
@@ -24,12 +24,12 @@ public sealed class ImprintManifestRicochet() : CardModel(1, CardType.Skill, Car
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
 
-        if ((Owner.Creature.GetPower<ImprintPower>()?.Amount ?? 0) < 1)
+        if ((Owner.Creature.GetPower<RicochetPower>()?.Amount ?? 0) < 1)
             return;
 
-        await PowerCmd.Apply<ImprintPower>(Owner.Creature, -1, Owner.Creature, this);
+        await PowerCmd.Apply<RicochetPower>(Owner.Creature, -1, Owner.Creature, this);
 
-        var applied = await PowerCmd.Apply<RicochetImprintPower>(cardPlay.Target, IsUpgraded ? 6 : 4, Owner.Creature, this);
+        var applied = await PowerCmd.Apply<RicochetManifestPower>(cardPlay.Target, IsUpgraded ? 6 : 4, Owner.Creature, this);
         applied?.Configure(IsUpgraded ? 7m : 5m);
     }
 }

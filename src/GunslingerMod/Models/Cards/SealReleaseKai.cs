@@ -68,7 +68,6 @@ public sealed class SealReleaseKai() : CardModel(3, CardType.Attack, CardRarity.
 
             if (wasAlive && !target.IsAlive)
             {
-                await PowerCmd.Apply<ImprintPower>(Owner.Creature, IsUpgraded ? 3 : 2, Owner.Creature, this);
                 cylinder.TryLoadOrIncrementSeal((byte)(IsUpgraded ? 2 : 1));
                 await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
             }

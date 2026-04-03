@@ -33,18 +33,17 @@ internal static class SealShotHelper
     public static async Task GrantTemporaryToHand(PlayerChoiceContext choiceContext, CardModel source)
     {
         var owner = source.Owner;
-        if (owner?.RunState == null)
+        var combatState = owner?.Creature?.CombatState;
+        if (owner?.RunState == null || combatState == null)
         {
-            GD.Print("[Gunslinger] SealShot grant skipped: source owner/runstate missing");
+            GD.Print("[Gunslinger] SealShot grant skipped: source owner/runstate/combatState missing");
             return;
         }
 
-        var generated = owner.RunState.CreateCard(ModelDb.Card<SealShot>(), owner);
+        var generated = combatState.CreateCard<SealShot>(owner);
         GD.Print($"[Gunslinger] SealShot grant attempt: source={source.Id.Entry}, card={generated.Id.Entry}");
         _ = choiceContext;
-        // Use default insert behavior for Hand.
-        // Casting an arbitrary numeric value to CardPilePosition can stall resolution on some game states.
-        await CardPileCmd.Add(generated, PileType.Hand);
+        await CardPileCmd.AddGeneratedCardToCombat(generated, PileType.Hand, addedByPlayer: true);
         GD.Print("[Gunslinger] SealShot grant queued to hand");
     }
 }

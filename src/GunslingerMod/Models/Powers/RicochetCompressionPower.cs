@@ -6,7 +6,7 @@ using MegaCrit.Sts2.Core.Models;
 
 namespace GunslingerMod.Models.Powers;
 
-public sealed class ImprintCompressionPower : PowerModel
+public sealed class RicochetCompressionPower : PowerModel
 {
     public override PowerType Type => PowerType.Buff;
 
@@ -19,7 +19,7 @@ public sealed class ImprintCompressionPower : PowerModel
         if (Owner.Player != player)
             return;
 
-        var imprint = Owner.GetPower<ImprintPower>()?.Amount ?? 0;
+        var imprint = Owner.GetPower<RicochetPower>()?.Amount ?? 0;
         var threshold = Math.Max(1, 6 - Amount);
         if (imprint < threshold)
             return;

@@ -3,7 +3,6 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using GunslingerMod.Models.Powers;
-using Godot;
 
 namespace GunslingerMod.Models.Cards;
 
@@ -25,13 +24,11 @@ public sealed class SealBurstLoad() : CardModel(1, CardType.Skill, CardRarity.Co
         }
 
         if (loadedNewSeal)
-        {
-            GD.Print("[Gunslinger] SealBurstLoad loaded new Seal: granting SealShot");
             await SealShotHelper.GrantTemporaryToHand(choiceContext, this);
-        }
 
-        for (var i = 0; i < loads; i++)
-            cylinder.TryLoadNext(CylinderPower.AmmoType.Tracer);
+        var highestSealIndex = SealShotHelper.FindHighestLevelSealIndex(cylinder);
+        if (highestSealIndex >= 0)
+            cylinder.IncrementSealLevel(highestSealIndex, 1);
 
         await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
     }

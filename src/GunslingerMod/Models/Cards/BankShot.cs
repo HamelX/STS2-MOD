@@ -1,7 +1,6 @@
 using System;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
@@ -26,9 +25,7 @@ public sealed class BankShot() : CardModel(1, CardType.Attack, CardRarity.Uncomm
         if (cylinder == null)
             return;
 
-        var hasRicochet =
-            (Owner.Creature.GetPower<RicochetPower>()?.Amount ?? 0) > 0 ||
-            (Owner.Creature.GetPower<RicochetImprintPower>()?.Amount ?? 0) > 0;
+        var hasRicochet = (Owner.Creature.GetPower<RicochetPower>()?.Amount ?? 0) > 0;
 
         if (!BulletResolver.HasAliveOpponents(Owner.Creature))
             return;
@@ -49,8 +46,7 @@ public sealed class BankShot() : CardModel(1, CardType.Attack, CardRarity.Uncomm
         if (!hasRicochet)
             return;
 
-        if (TryGetRicochetToConsume(out var powerToConsume))
-            await PowerCmd.Decrement(powerToConsume);
+        await PowerCmd.Apply<RicochetPower>(Owner.Creature, -1, Owner.Creature, this);
 
         if (target.IsAlive)
             await CreatureCmd.Damage(choiceContext, target, DynamicVars.Damage.BaseValue, ValueProp.Move, Owner.Creature, this);
@@ -59,25 +55,5 @@ public sealed class BankShot() : CardModel(1, CardType.Attack, CardRarity.Uncomm
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(3m);
-    }
-
-    private bool TryGetRicochetToConsume(out PowerModel power)
-    {
-        var ricochet = Owner.Creature.GetPower<RicochetPower>();
-        if (ricochet != null && ricochet.Amount > 0)
-        {
-            power = ricochet;
-            return true;
-        }
-
-        var imprintRicochet = Owner.Creature.GetPower<RicochetImprintPower>();
-        if (imprintRicochet != null && imprintRicochet.Amount > 0)
-        {
-            power = imprintRicochet;
-            return true;
-        }
-
-        power = null!;
-        return false;
     }
 }

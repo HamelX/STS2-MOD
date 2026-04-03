@@ -10,17 +10,9 @@ namespace GunslingerMod.Models.Cards;
 
 public sealed class QuickRack() : CardModel(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
-    private const int ImprintCost = 1;
-
-    protected override bool IsPlayable => (Owner?.Creature?.GetPower<ImprintPower>()?.Amount ?? 0) >= ImprintCost;
-
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        if ((Owner.Creature.GetPower<ImprintPower>()?.Amount ?? 0) < ImprintCost)
-            return;
-
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
-        await PowerCmd.Apply<ImprintPower>(Owner.Creature, -ImprintCost, Owner.Creature, this);
 
         var cylinder = Owner.Creature.GetPower<CylinderPower>();
         if (cylinder == null)

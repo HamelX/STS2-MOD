@@ -27,8 +27,7 @@ public sealed class PrecisionShot() : CardModel(1, CardType.Attack, CardRarity.C
         if (!didFire)
             return;
 
-        // Precision baseline: +2 Imprint. Upgrade sharpens setup tempo (+1 additional Imprint).
-        await PowerCmd.Apply<ImprintPower>(Owner.Creature, IsUpgraded ? 3 : 2, Owner.Creature, this);
+        await PowerCmd.Apply<RicochetPower>(Owner.Creature, IsUpgraded ? 2 : 1, Owner.Creature, this);
 
         var baseDamage = BulletResolver.GetBaseDamage(ammoType, sealLevel) + 3m;
         await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, baseDamage);

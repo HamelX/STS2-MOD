@@ -7,7 +7,7 @@ using MegaCrit.Sts2.Core.Models;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class ImprintSqueeze() : CardModel(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+public sealed class RicochetSqueeze() : CardModel(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -22,6 +22,6 @@ public sealed class ImprintSqueeze() : CardModel(0, CardType.Skill, CardRarity.U
                 null,
                 this));
 
-        await PowerCmd.Apply<ImprintPower>(Owner.Creature, IsUpgraded ? 3 : 2, Owner.Creature, this);
+        await PowerCmd.Apply<RicochetPower>(Owner.Creature, IsUpgraded ? 3 : 2, Owner.Creature, this);
     }
 }

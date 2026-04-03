@@ -31,7 +31,7 @@ public sealed class ExecutionShot() : CardModel(1, CardType.Attack, CardRarity.U
         if (target.CurrentHp * 2 <= target.MaxHp)
         {
             damage += IsUpgraded ? 14m : 12m;
-            await PowerCmd.Apply<ImprintPower>(Owner.Creature, 2, Owner.Creature, this);
+            await PowerCmd.Apply<RicochetPower>(Owner.Creature, 2, Owner.Creature, this);
         }
 
         await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, damage);

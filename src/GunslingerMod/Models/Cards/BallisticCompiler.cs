@@ -10,7 +10,7 @@ public sealed class BallisticCompiler() : CardModel(1, CardType.Power, CardRarit
 {
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // First Tracer shot each turn: draw 1 + gain Imprint equal to stacks.
+        // First Tracer shot each turn: draw 1 + gain Ricochet equal to stacks.
         // Base: +1 stack, upgraded: +2 stacks.
         await PowerCmd.Apply<BallisticCompilerPower>(Owner.Creature, IsUpgraded ? 2 : 1, Owner.Creature, this);
     }

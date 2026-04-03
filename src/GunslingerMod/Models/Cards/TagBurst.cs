@@ -34,10 +34,7 @@ public sealed class TagBurst() : CardModel(1, CardType.Attack, CardRarity.Common
         await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, cylinder.CountLoaded(), Owner.Creature, this);
 
         if (!didFire)
-        {
-            await CreatureCmd.Damage(choiceContext, target, 5m, ValueProp.Move, Owner.Creature, this);
             return;
-        }
 
         var bulletDamage = IsUpgraded ? 10m : 7m;
         await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, bulletDamage);
