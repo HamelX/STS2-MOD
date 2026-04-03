@@ -144,6 +144,10 @@ internal static class BulletResolver
 
             await CreatureCmd.Damage(choiceContext, target, finalDamage, props, source, cardSource);
 
+            // Lethal bullet hits should hand combat resolution back to the game immediately.
+            if (!target.IsAlive || target.IsDead || target.CurrentHp <= 0)
+                return;
+
             if (!HasAliveOpponents(source))
                 return;
 
