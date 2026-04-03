@@ -18,41 +18,30 @@ public sealed class EmptyTheMagazine() : CardModel(1, CardType.Skill, CardRarity
         if (cylinder == null)
             return;
 
-        var normalCount = 0;
-        var tracerCount = 0;
-        var sealLevelTotal = 0;
+        var loadedCount = 0;
         for (var i = 0; i < CylinderPower.MaxRounds; i++)
         {
-            switch (cylinder.GetAmmoType(i))
-            {
-                case CylinderPower.AmmoType.Normal:
-                    normalCount++;
-                    break;
-                case CylinderPower.AmmoType.Tracer:
-                    tracerCount++;
-                    break;
-                case CylinderPower.AmmoType.Seal:
-                    sealLevelTotal += cylinder.GetSealLevel(i);
-                    break;
-            }
+            if (cylinder.IsLoaded(i))
+                loadedCount++;
         }
 
-        var blockAmount = IsUpgraded
-            ? (decimal)Math.Ceiling(sealLevelTotal * 1.5m)
-            : sealLevelTotal;
+        if (loadedCount <= 0)
+            return;
+
+        var blockAmount = (decimal)(IsUpgraded ? loadedCount + 1 : loadedCount);
         if (blockAmount > 0)
             await CreatureCmd.GainBlock(Owner.Creature, blockAmount, ValueProp.Move, cardPlay);
 
         cylinder.ClearAll();
         await PowerCmd.SetAmount<CylinderPower>(Owner.Creature, 0, Owner.Creature, this);
 
-        var drawAmount = IsUpgraded ? normalCount : normalCount / 2;
-        if (drawAmount > 0)
-            await CardPileCmd.Draw(choiceContext, drawAmount, Owner);
-
-        var energyGain = tracerCount / 3;
+        var drawAmount = (loadedCount / 2) + (IsUpgraded ? 1 : 0);
+        var energyGain = loadedCount >= (IsUpgraded ? 3 : 4) ? 1 : 0;
         if (energyGain > 0)
             await PlayerCmd.GainEnergy(energyGain, Owner);
+
+        if (drawAmount > 0)
+            await CardPileCmd.Draw(choiceContext, drawAmount, Owner);
     }
 
     protected override void OnUpgrade()

@@ -9,5 +9,5 @@ public sealed class OverclockDrumPower : PowerModel
 
     public override PowerStackType StackType => PowerStackType.Single;
 
-    public const decimal FirstTracerDamageBonus = 14m;
+    public const decimal FirstTracerDamageBonus = 8m;
 }

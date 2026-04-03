@@ -20,7 +20,7 @@ public sealed class WalkingFire() : CardModel(1, CardType.Attack, CardRarity.Unc
             return;
 
         var pulls = IsUpgraded ? 3 : 2;
-        var anyShotSucceeded = false;
+        var tracerShotSucceeded = false;
 
         for (var i = 0; i < pulls; i++)
         {
@@ -37,12 +37,14 @@ public sealed class WalkingFire() : CardModel(1, CardType.Attack, CardRarity.Unc
             if (!didFire)
                 continue;
 
-            anyShotSucceeded = true;
+            if (ammoType == CylinderPower.AmmoType.Tracer)
+                tracerShotSucceeded = true;
+
             var damage = Math.Max(0m, BulletResolver.GetBaseDamage(ammoType, sealLevel));
             await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, damage);
         }
 
-        if (anyShotSucceeded)
+        if (tracerShotSucceeded)
         {
             if (cylinder.TryLoadNext(CylinderPower.AmmoType.Tracer))
                 await BulletResolver.RegisterTracerShots(choiceContext, Owner.Creature, this, 1);

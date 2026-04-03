@@ -35,7 +35,6 @@ public sealed class Shoot() : CardModel(1, CardType.Attack, CardRarity.Basic, Ta
             return;
         }
 
-        // A dry fire still rotates the cylinder, but does not grant fallback damage.
-        return;
+        await CardPileCmd.Draw(choiceContext, 1, Owner);
     }
 }

@@ -11,17 +11,15 @@ namespace GunslingerMod.Models.Cards;
 
 public sealed class EtchedTracer() : CardModel(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
-    protected override bool IsPlayable => (Owner?.Creature?.GetPower<CylinderPower>()?.CountLoaded() ?? 0) > 0;
-
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
 
         var cylinder = Owner.Creature.GetPower<CylinderPower>();
-        if (cylinder == null || cylinder.CountLoaded() <= 0)
+        if (cylinder == null)
             return;
 
-        if (Owner.Creature.CombatState?.GetOpponentsOf(Owner.Creature).Any(c => c.IsAlive) == true)
+        if (cylinder.CountLoaded() > 0 && Owner.Creature.CombatState?.GetOpponentsOf(Owner.Creature).Any(c => c.IsAlive) == true)
         {
             var target = BulletResolver.ResolveAliveTarget(Owner.Creature, cardPlay.Target);
 

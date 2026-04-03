@@ -2,6 +2,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.ValueProps;
 using GunslingerMod.Models.Powers;
 
 namespace GunslingerMod.Models.Cards;
@@ -24,6 +25,8 @@ public sealed class SealLoad() : CardModel(1, CardType.Skill, CardRarity.Common,
 
         if (loadedNewSeal)
             await SealShotHelper.GrantTemporaryToHand(choiceContext, this);
+
+        await CreatureCmd.GainBlock(Owner.Creature, IsUpgraded ? 6m : 4m, ValueProp.Move, cardPlay);
 
         var count = cylinder.CountLoaded();
         if (count > MaxAmmo)

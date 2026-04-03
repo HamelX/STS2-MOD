@@ -11,7 +11,7 @@ public sealed class EchoNote() : CardModel(0, CardType.Skill, CardRarity.Common,
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var draw = IsUpgraded ? 2 : 1;
-        if ((Owner.Creature.GetPower<RicochetPower>()?.Amount ?? 0) >= 1)
+        if ((Owner.Creature.GetPower<TracerFiredThisTurnPower>()?.Amount ?? 0) > 0)
             draw += 1;
 
         await CardPileCmd.Draw(choiceContext, draw, Owner);

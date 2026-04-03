@@ -53,6 +53,7 @@ public sealed class Reload() : CardModel(0, CardType.Skill, CardRarity.Common, T
                 await Cmd.Wait(0.07f);
         }
 
-        await CardPileCmd.Draw(choiceContext, 1, Owner);
+        if (IsUpgraded)
+            await CardPileCmd.Draw(choiceContext, 1, Owner);
     }
 }

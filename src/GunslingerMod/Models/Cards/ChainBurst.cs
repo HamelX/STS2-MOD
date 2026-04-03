@@ -18,8 +18,8 @@ public sealed class ChainBurst() : CardModel(1, CardType.Attack, CardRarity.Unco
         if (cylinder == null)
             return;
 
-        var remainingPulls = 1;
-        var firstResolved = false;
+        var remainingPulls = IsUpgraded ? 2 : 1;
+        var bonusPullsGranted = false;
         while (remainingPulls > 0)
         {
             remainingPulls--;
@@ -39,11 +39,10 @@ public sealed class ChainBurst() : CardModel(1, CardType.Attack, CardRarity.Unco
             var damage = Math.Max(0m, BulletResolver.GetBaseDamage(ammoType, sealLevel));
             await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, damage);
 
-            if (!firstResolved)
+            if (!bonusPullsGranted && ammoType == CylinderPower.AmmoType.Tracer)
             {
-                firstResolved = true;
-                if (ammoType == CylinderPower.AmmoType.Tracer)
-                    remainingPulls += IsUpgraded ? 3 : 2;
+                bonusPullsGranted = true;
+                remainingPulls += IsUpgraded ? 2 : 1;
             }
         }
     }

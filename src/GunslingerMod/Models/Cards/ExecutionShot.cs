@@ -4,7 +4,6 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using GunslingerMod.Models.Combat;
 using GunslingerMod.Models.Powers;
-
 namespace GunslingerMod.Models.Cards;
 
 public sealed class ExecutionShot() : CardModel(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
@@ -29,10 +28,7 @@ public sealed class ExecutionShot() : CardModel(1, CardType.Attack, CardRarity.U
         var damage = IsUpgraded ? 14m : 10m;
 
         if (target.CurrentHp * 2 <= target.MaxHp)
-        {
             damage += IsUpgraded ? 14m : 12m;
-            await PowerCmd.Apply<RicochetPower>(Owner.Creature, 2, Owner.Creature, this);
-        }
 
         await BulletResolver.FireAtTarget(choiceContext, Owner.Creature, target, this, ammoType, sealLevel, damage);
     }

@@ -34,14 +34,11 @@ public static class BulletContext
             or SprayFire
             or ChainBurst
             or WalkingFire
-            or BlankFire
             or EtchedTracer
             or ExecutionShot
             or PrecisionShot
-            or RicochetShot
             or RicochetFollowUp
             or TracerStrike
-            or TagBurst
             or HuntTrigger
             or BankShot
             or CrossfireRhythm

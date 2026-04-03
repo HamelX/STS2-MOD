@@ -72,7 +72,7 @@ internal static class BulletResolver
     }
 
     private static bool IsSealDedicatedCard(CardModel cardSource)
-        => cardSource is SealReleaseKai or GrandRite or SealSearch or SealBreak;
+        => cardSource is SealReleaseKai or GrandRite;
 
     private static bool AreAllLoadedRoundsSeal(CylinderPower cylinder)
     {
@@ -136,7 +136,6 @@ internal static class BulletResolver
                 ((source.GetPower<TracerFiredThisTurnPower>()?.Amount ?? 0) <= 0);
 
             var finalDamage = ResolveBulletEffect(source, ammoType, sealLevel, damage);
-            finalDamage += source.GetPower<BulletIgnitionPower>()?.Amount ?? 0;
             if (isFirstTracerShotThisTurn && source.GetPower<OverclockDrumPower>()?.Amount > 0)
                 finalDamage += OverclockDrumPower.FirstTracerDamageBonus;
 
@@ -190,6 +189,13 @@ internal static class BulletResolver
 
                 if (isFirstTracerShotThisTurn)
                 {
+                    if (source.GetPower<OverclockDrumPower>()?.Amount > 0)
+                    {
+                        var cylinder = source.GetPower<CylinderPower>();
+                        if (cylinder != null && TryLoadTracerWithFallback(cylinder))
+                            await PowerCmd.SetAmount<CylinderPower>(source, cylinder.CountLoaded(), source, cardSource);
+                    }
+
                     var ballisticCompiler = source.GetPower<BallisticCompilerPower>()?.Amount ?? 0;
                     if (ballisticCompiler > 0)
                     {
@@ -248,5 +254,21 @@ internal static class BulletResolver
             return preferredTarget;
 
         return source.CombatState?.GetOpponentsOf(source).FirstOrDefault(c => c.IsAlive && c.CurrentHp > 0);
+    }
+
+    private static bool TryLoadTracerWithFallback(CylinderPower cylinder)
+    {
+        if (cylinder.TryLoadNext(CylinderPower.AmmoType.Tracer))
+            return true;
+
+        var idx = cylinder.ChamberIndex;
+        var ammo = cylinder.GetAmmoType(idx);
+        if (ammo is CylinderPower.AmmoType.Normal or CylinderPower.AmmoType.Enhanced or CylinderPower.AmmoType.Penetrator)
+        {
+            cylinder.ClearChamberAt(idx);
+            return cylinder.TryLoadInto(idx, CylinderPower.AmmoType.Tracer);
+        }
+
+        return false;
     }
 }

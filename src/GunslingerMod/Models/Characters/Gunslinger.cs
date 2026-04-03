@@ -130,7 +130,7 @@ public sealed class Gunslinger : CustomCharacterModel
             [
                 ("title", "건슬링어"),
                 ("titleObject", "건슬링어"),
-                ("description", "실린더를 돌리며 추적탄으로 흐름을 만들고, 도탄 폭발로 템포를 이어가며, 봉인탄으로 마무리하는 총잡이입니다."),
+                ("description", "추적탄으로 리듬을 만들고, 도탄으로 흐름을 잇고, 봉인탄으로 마무리하는 총잡이."),
                 ("cardsModifierTitle", "건슬링어 카드"),
                 ("cardsModifierDescription", "건슬링어 카드가 보상과 상점에 등장합니다."),
                 ("pronounSubject", "그"),
@@ -160,7 +160,7 @@ public sealed class Gunslinger : CustomCharacterModel
             [
                 ("title", "The Gunslinger"),
                 ("titleObject", "The Gunslinger"),
-                ("description", "A gunslinger who keeps tempo with tracer rounds, converts momentum into ricochet bursts, and finishes with seal rounds."),
+                ("description", "A gunslinger who keeps tempo with Tracer rounds, converts momentum into Ricochet, and finishes with Seal rounds."),
                 ("cardsModifierTitle", "Gunslinger Cards"),
                 ("cardsModifierDescription", "Gunslinger cards will now appear in rewards and shops."),
                 ("pronounSubject", "he"),

@@ -11,7 +11,7 @@ using GunslingerMod.Models.DynamicVars;
 
 namespace GunslingerMod.Models.Cards;
 
-public sealed class Panning() : CardModel(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class Panning() : CardModel(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

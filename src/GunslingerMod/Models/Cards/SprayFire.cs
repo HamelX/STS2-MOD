@@ -13,7 +13,7 @@ using GunslingerMod.Models.DynamicVars;
 namespace GunslingerMod.Models.Cards;
 
 // Random-target full-cylinder barrage. Consumes all loaded rounds.
-public sealed class SprayFire() : CardModel(2, CardType.Attack, CardRarity.Common, TargetType.None)
+public sealed class SprayFire() : CardModel(1, CardType.Attack, CardRarity.Common, TargetType.None)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
@@ -46,7 +46,7 @@ public sealed class SprayFire() : CardModel(2, CardType.Attack, CardRarity.Commo
             if (randomTarget == null)
                 break;
 
-            var shotDamage = BulletResolver.GetBaseDamage(ammoType, sealLevel);
+            var shotDamage = BulletResolver.GetBaseDamage(ammoType, sealLevel) + (IsUpgraded ? 2m : 0m);
 
             // Per-shot resolution contract:
             // fire once -> apply damage -> re-check combat end before continuing.
