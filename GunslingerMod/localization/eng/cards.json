@@ -118,9 +118,9 @@
   "HUNT_TRIGGER.title": "Hunt Trigger",
   "HUNT_TRIGGER.description": "{IfUpgraded:show:Trigger Pull 1 time. If you fired a Tracer this turn, Trigger Pull 2 additional times. Otherwise, load 1 Tracer round.|Trigger Pull 1 time. If you fired a Tracer this turn, Trigger Pull 1 additional time. Otherwise, load 1 Tracer round.}",
   "SEAL_BREAK.title": "Seal Break",
-  "SEAL_BREAK.description": "{IfUpgraded:show:Align the highest loaded Seal bullet to the firing chamber. Directly fire 1 loaded Seal bullet. On successful fire, draw 2 cards.|Align the highest loaded Seal bullet to the firing chamber. Directly fire 1 loaded Seal bullet. On successful fire, draw 1 card.}",
+  "SEAL_BREAK.description": "{IfUpgraded:show:Move the highest-level loaded Seal bullet into the firing chamber. Fire it 1 time. If it was a Seal bullet, draw 2 cards.|Move the highest-level loaded Seal bullet into the firing chamber. Fire it 1 time. If it was a Seal bullet, draw 1 card.}",
   "RICOCHET_FOLLOW_UP.title": "Ricochet Follow-Up",
-  "RICOCHET_FOLLOW_UP.description": "{IfUpgraded:show:Trigger Pull 1 time. If you have Ricochet, Trigger Pull +1 time.|Trigger Pull 1 time. If you have Ricochet, draw 1 card. Gain 1 Imprint.}",
+  "RICOCHET_FOLLOW_UP.description": "{IfUpgraded:show:Trigger Pull 1 time. If you have Ricochet, Trigger Pull 1 additional time.|Trigger Pull 1 time. If you have Ricochet, draw 1 card and gain 1 Imprint.}",
   "HUNT_PREP.title": "Hunt Prep",
   "HUNT_PREP.description": "{IfUpgraded:show:Count as having fired a Tracer this turn. Load 2 Tracer rounds. Draw 2 cards.|Count as having fired a Tracer this turn. Load 2 Tracer rounds. Draw 1 card.}",
   "BARRAGE_COLLAPSE.title": "Barrage Collapse",
@@ -144,5 +144,5 @@
   "ETCHED_RESONANCE.title": "Etched Resonance",
   "ETCHED_RESONANCE.description": "{IfUpgraded:show:Load Tracer rounds equal to highest Seal Level. Reduce all loaded Seal levels to 1.|Load Tracer rounds equal to highest Seal Level. Reduce all loaded Seal levels to 0.}",
   "SEAL_SHOT.title": "Seal Shot",
-  "SEAL_SHOT.description": "Align the highest-level loaded Seal round to the firing chamber. Directly fire 1 loaded Seal round. Exhaust."
+  "SEAL_SHOT.description": "Move the highest-level loaded Seal bullet into the firing chamber. Fire it 1 time. Exhaust."
 }

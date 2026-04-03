@@ -118,9 +118,9 @@
   "HUNT_TRIGGER.title": "헌트 트리거",
   "HUNT_TRIGGER.description": "{IfUpgraded:show:격발 1회. 이번 턴 추적탄을 발사했다면 추가로 2회 격발. 아니면 추적탄 1발 장전.|격발 1회. 이번 턴 추적탄을 발사했다면 추가로 1회 격발. 아니면 추적탄 1발 장전.}",
   "SEAL_BREAK.title": "봉인 파열",
-  "SEAL_BREAK.description": "{IfUpgraded:show:가장 높은 레벨의 장전된 봉인탄을 발사 칸으로 정렬합니다. 장전된 봉인탄 1발을 직접 격발합니다. 발사 성공 시 카드 2장 뽑기.|가장 높은 레벨의 장전된 봉인탄을 발사 칸으로 정렬합니다. 장전된 봉인탄 1발을 직접 격발합니다. 발사 성공 시 카드 1장 뽑기.}",
+  "SEAL_BREAK.description": "{IfUpgraded:show:가장 높은 레벨의 장전된 봉인탄을 발사 칸으로 옮깁니다. 1회 발사합니다. 봉인탄이었다면 카드 2장을 뽑습니다.|가장 높은 레벨의 장전된 봉인탄을 발사 칸으로 옮깁니다. 1회 발사합니다. 봉인탄이었다면 카드 1장을 뽑습니다.}",
   "RICOCHET_FOLLOW_UP.title": "도탄 추격",
-  "RICOCHET_FOLLOW_UP.description": "{IfUpgraded:show:격발 1회. 도탄이 있으면 +1회 격발.|격발 1회. 도탄이 있으면 카드 1장 뽑기. 각인 1 획득.}",
+  "RICOCHET_FOLLOW_UP.description": "{IfUpgraded:show:격발 1회. 도탄이 있으면 추가로 1회 격발.|격발 1회. 도탄이 있으면 카드 1장을 뽑고 각인 1을 얻습니다.}",
   "HUNT_PREP.title": "사냥개시 준비",
   "HUNT_PREP.description": "{IfUpgraded:show:이번 턴 추적탄을 발사한 것으로 간주. 추적탄 2발 장전. 카드 2장 뽑기.|이번 턴 추적탄을 발사한 것으로 간주. 추적탄 2발 장전. 카드 1장 뽑기.}",
   "BARRAGE_COLLAPSE.title": "탄막 붕괴",
@@ -144,5 +144,5 @@
   "ETCHED_RESONANCE.title": "각인 공명",
   "ETCHED_RESONANCE.description": "{IfUpgraded:show:최고 봉인 레벨만큼 추적탄 장전. 모든 봉인탄 레벨을 1로 낮춤.|최고 봉인 레벨만큼 추적탄 장전. 모든 봉인탄 레벨을 0으로 낮춤.}",
   "SEAL_SHOT.title": "봉인 사격",
-  "SEAL_SHOT.description": "가장 높은 레벨의 장전된 봉인탄을 발사 칸으로 정렬합니다. 장전된 봉인탄 1발을 직접 격발합니다. 소멸."
+  "SEAL_SHOT.description": "가장 높은 레벨의 장전된 봉인탄을 발사 칸으로 옮깁니다. 1회 발사합니다. 소멸."
 }
